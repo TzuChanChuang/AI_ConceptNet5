@@ -262,7 +262,7 @@ public class mySENTENCE {
 						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
-						sentence = sentence + "which " +" " + grammar.verbConversionPassiveType(concepts.get(i+2), concepts.get(i)) +" ";
+						sentence = sentence + "which " + grammar.verbConversionPassiveType(concepts.get(i+2), concepts.get(i)) +" ";
 						which++;
 					}
 					main++;
@@ -577,7 +577,10 @@ public class mySENTENCE {
 		length = token.length;
 		
 		// score
-		score = score+((length-7)*0.4);
+		if(length>7)
+			score = score+((length-7)*0.25);
+		else
+			score = score;
 		score = new BigDecimal(score).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
 		if(length<3 || length>15) score = 0;
 		
