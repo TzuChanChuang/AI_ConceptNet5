@@ -14,7 +14,7 @@ public class Part1 {
 		
 		//  test one concept
 		Markov myMarkov = new Markov(sInput);
-		int state_return = 1, t_b=3, t_f=3;
+		double state_return = 1, t_b=2, t_f=2;
 		while(state_return!=0){
 			System.out.println("----------------Markov "+t_b+" "+t_f+"----------------");
 			try {

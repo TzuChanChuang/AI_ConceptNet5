@@ -236,20 +236,25 @@ public class Grammar {
 		
 		String ans = verb;
 		
-		if(irregularPassiveVerb.get(verb)!=null)
-			ans = irregularPassiveVerb.get(verb);
-		else if(verb.substring(verb.length()-1).equals("e"))
-			ans = verb+"d";
-		else if(verb.substring(verb.length()-1).equals("y")){
-			if(verb.substring(verb.length()-2).equals("ay") || verb.substring(verb.length()-2).equals("ey") || verb.substring(verb.length()-2).equals("iy") || verb.substring(verb.length()-2).equals("oy") || verb.substring(verb.length()-2).equals("uy"))
-				ans = verb+"ed";
+		String[] token = verb.split("_");
+		
+		if(irregularPassiveVerb.get(token[0])!=null)
+			ans = irregularPassiveVerb.get(token[0]);
+		else if(token[0].substring(token[0].length()-1).equals("e"))
+			ans = token[0]+"d";
+		else if(token[0].substring(token[0].length()-1).equals("y")){
+			if(token[0].substring(token[0].length()-2).equals("ay") || token[0].substring(token[0].length()-2).equals("ey") || token[0].substring(token[0].length()-2).equals("iy") || token[0].substring(token[0].length()-2).equals("oy") || token[0].substring(token[0].length()-2).equals("uy"))
+				ans = token[0]+"ed";
 			else
-				ans = verb.substring(0, verb.length()-1)+"ied";
+				ans = token[0].substring(0, token[0].length()-1)+"ied";
 		}
-		else if(verb.length()>=3 && isCVC(verb.substring(verb.length()-3)))
-			ans = verb+verb.substring(verb.length()-1)+"ed";
+		else if(token[0].length()>=3 && isCVC(token[0].substring(token[0].length()-3)))
+			ans = token[0]+token[0].substring(token[0].length()-1)+"ed";
 		else
-			ans = verb+"ed";
+			ans = token[0]+"ed";
+		
+		for(int i=1; i<token.length; i++)
+			ans = ans + "_" + token[i];
 		
 		if(noun.equals("I"))
 			ans = "am "+ans;
@@ -270,9 +275,28 @@ public class Grammar {
 	public String addING(String verb){
 		
 		String[] token = verb.split("_");
-		String output = token[0]+"ing";
+		String output;
+		
+		if(token[0].substring(token[0].length()-2).equals("ge"))
+			output = token[0].substring(0, token[0].length()-1)+"ing";
+		else if(token[0].equals("eye")) // just for "eye" case
+			output = token[0]+"ing";
+		else if(token[0].length()>=3 && token[0].substring(token[0].length()-1).equals("e") && isVCe(token[0].substring(token[0].length()-3)))
+			output = token[0].substring(0, token[0].length()-1)+"ing";
+		else if(token[0].substring(token[0].length()-2).equals("ie"))
+			output = token[0].substring(0, token[0].length()-2)+"ying";
+		else if(token[0].length()>=3 && isCVC(token[0].substring(token[0].length()-3)))
+			output = token[0]+token[0].substring(token[0].length()-1)+"ing";
+		else if(token[0].substring(token[0].length()-1).equals("c"))
+			output = token[0]+"king";
+		else if(token[0].contains("qu"))
+			output = token[0]+token[0].substring(token[0].length()-1)+"ing";		
+		else
+			output = token[0]+"ing";
+						
 		for(int i=1; i<token.length; i++)
 			output = output + "_" + token[i];
+		
 		return output;
 		
 	}
@@ -286,4 +310,16 @@ public class Grammar {
 		
 		return ans;
 	}
+	
+	public boolean isVCe(String suffixFragment){ //  check if a-e e-e i-e o-e u-e
+		
+		boolean ans=false;
+		
+		if(Vowel.contains(suffixFragment.substring(0,suffixFragment.length()-2)) && !Vowel.contains(suffixFragment.substring(1,suffixFragment.length()-1)) && suffixFragment.substring(2,suffixFragment.length()).equals("e"))
+			ans = true;
+		
+		return ans;
+	}
+	
+	
 }
