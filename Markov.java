@@ -55,7 +55,7 @@ public class Markov {
 		for (int i = 0; i < datalist.size(); i++) {
 			System.out.println(datalist.get(i).start);
 			startWords.add(datalist.get(i).start);
-			relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+			if(!datalist.get(i).end.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 		}
 		// 如果查不到東西
 		if (datalist.size() == 0) return 2;
@@ -71,7 +71,8 @@ public class Markov {
 			//System.out.println(datalist.size());
 			// put into query and relationList
 			for(int i=0; i<datalist.size(); i++){
-				relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
+				if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
+					relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
 				if(index==0 && !query.contains(datalist.get(i).end))
 					query.add(datalist.get(i).end);
 			}
@@ -82,7 +83,8 @@ public class Markov {
 		// handle _start
 		markovChain.put("_start", startWords);
 		// Add the words to the hash table
-		addRelation(relationList);
+		if(!relationList.isEmpty())addRelation(relationList);
+		else return 3;
 
 		// 生出句子
 		// random concepts
@@ -91,7 +93,8 @@ public class Markov {
 		int time=0;
 		while(mySentenceList.size()<=num_sentence){
 			mySENTENCE mySentence = generateConcepets();
-			if(mySentence.isSentence(1, this.concept, ""))mySentenceList.add(mySentence);
+			if(mySentence!=null && mySentence.isSentence(1, this.concept, ""))
+				mySentenceList.add(mySentence);
 			time++;
 			if(time>200) {
 				//System.out.println("stop in loop");
