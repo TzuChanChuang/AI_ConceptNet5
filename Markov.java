@@ -18,7 +18,7 @@ public class Markov {
 	public static Hashtable<String, Vector<String>> markovChain = new Hashtable<String, Vector<String>>();
 	static Random rnd = new Random();
 	
-	private int num_sentence = 20;
+	public int num_sentence = 20;
 	
 	public Markov(String concept){
 		this.concept = concept;
@@ -93,7 +93,7 @@ public class Markov {
 			mySENTENCE mySentence = generateConcepets();
 			if(mySentence.isSentence(1, this.concept, ""))mySentenceList.add(mySentence);
 			time++;
-			if(time>100) {
+			if(time>200) {
 				//System.out.println("stop in loop");
 				return 3;
 			}

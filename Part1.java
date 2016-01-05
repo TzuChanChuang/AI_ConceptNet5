@@ -30,6 +30,8 @@ public class Part1 {
 					t_f-=0.5;
 					t_b-=0.5;
 			}
+			if(t_f==0.0 || t_b==0.0)
+				myMarkov.num_sentence =5;
 		}
 		
 	}
