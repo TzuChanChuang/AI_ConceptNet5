@@ -27,7 +27,7 @@ public class Grammar {
 				Grammar grammar = new Grammar();
 				
 				//System.out.println(grammar.verbConversionPassiveType(verbInput, nounInput));
-				System.out.println(grammar.isPlural(nounInput));
+				System.out.println(grammar.verbConversionPassiveType(verbInput,nounInput));
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -285,10 +285,12 @@ public class Grammar {
 			output = token[0].substring(0, token[0].length()-1)+"ing";
 		else if(token[0].substring(token[0].length()-2).equals("ie"))
 			output = token[0].substring(0, token[0].length()-2)+"ying";
-		else if(token[0].length()>=3 && isCVC(token[0].substring(token[0].length()-3)))
-			output = token[0]+token[0].substring(token[0].length()-1)+"ing";
 		else if(token[0].substring(token[0].length()-1).equals("c"))
 			output = token[0]+"king";
+		else if(token[0].substring(token[0].length()-2).equals("ay") || token[0].substring(token[0].length()-2).equals("ey") || token[0].substring(token[0].length()-2).equals("iy") || token[0].substring(token[0].length()-2).equals("oy") || token[0].substring(token[0].length()-2).equals("uy"))
+			output = token[0]+"ing";
+		else if(token[0].length()>=3 && isCVC(token[0].substring(token[0].length()-3)))
+			output = token[0]+token[0].substring(token[0].length()-1)+"ing";
 		else if(token[0].contains("qu"))
 			output = token[0]+token[0].substring(token[0].length()-1)+"ing";		
 		else
