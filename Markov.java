@@ -36,6 +36,8 @@ public class Markov {
 		//把concept放入 _start 中
 		Vector<String> startWords = markovChain.get("_start");
 		startWords.add(this.concept);
+		// 增加原本input concept的start比重
+		startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept);
 		
 		//open database
 		database.buildSQLite();
@@ -51,7 +53,7 @@ public class Markov {
 		while(index<query.size()) {
 			
 			// Get some words from database
-			List<myDATA> datalist = database.searchTable(query.get(index), "%", "%", 2, false);
+			List<myDATA> datalist = database.searchTable(query.get(index), "%", "%", 3, false);
 			
 			//printf
 			System.out.println(query.get(index));
@@ -60,7 +62,7 @@ public class Markov {
 			// put into query and relationList
 			for(int i=0; i<datalist.size(); i++){
 				relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
-				if(index==0)
+				if(index==0 && !query.contains(datalist.get(i).end))
 					query.add(datalist.get(i).end);
 			}
 			
@@ -69,7 +71,7 @@ public class Markov {
 		// 以concept=end 往前一層
 		System.out.println("----------------before levels----------------");
 		// Get some words from database
-		List<myDATA> datalist = database.searchTable("%", "%", concept, 2, false);
+		List<myDATA> datalist = database.searchTable("%", "%", concept, 3, false);
 		// put intorelationList and handle _start
 		for(int i=0; i<datalist.size(); i++){
 			System.out.println(datalist.get(i).start);
@@ -89,13 +91,19 @@ public class Markov {
 		database.disconnDB();
 		
 		// 生出句子
+		// random concepts
 		System.out.println("----------------generatl sentences----------------");
 		List<mySENTENCE> mySentenceList = new ArrayList<>();
 		while(mySentenceList.size()<=num_sentence){
-			mySENTENCE mySentence = generateSentence();
-			mySentenceList.add(mySentence);
+			mySENTENCE mySentence = generateConcepets();
+			if(mySentence.isSentence(1, this.concept, ""))mySentenceList.add(mySentence);
 		}
-		// bubble sort
+        // 根據rel造句
+        for (int i=0; i<mySentenceList.size(); i++){
+        	mySentenceList.get(i).buildSentence();
+        	mySentenceList.get(i).calScore();
+        }
+		//sort
         Collections.sort(mySentenceList,
         new Comparator<mySENTENCE>() {
             public int compare(mySENTENCE o1, mySENTENCE o2) {
@@ -106,12 +114,11 @@ public class Markov {
                 return -1;
             }
         });
-        //print
-        for (int i=0; i<mySentenceList.size(); i++){
-        	System.out.println(mySentenceList.get(i).score+"  "+mySentenceList.get(i).concepts.toString());
-        	mySentenceList.get(i).buildSentence();
-        	//System.out.println(mySentenceList.get(i).score+"  "+mySentenceList.get(i).sentence);
-        }
+       // print
+       for (int i=0; i<mySentenceList.size(); i++){
+       		System.out.println(mySentenceList.get(i).score+"  "+mySentenceList.get(i).concepts.toString());
+       		System.out.println(mySentenceList.get(i).score+"  "+mySentenceList.get(i).sentence);
+       }
         
 		
 	}
@@ -147,7 +154,7 @@ public class Markov {
 	/*
 	 * Generate a markov phrase
 	 */
-	public static mySENTENCE generateSentence() {
+	public static mySENTENCE generateConcepets() {
 		
 		// Vector to hold the phrase
 		Vector<String> newPhrase = new Vector<String>();
@@ -191,7 +198,7 @@ public class Markov {
 		//return 
 		mySENTENCE mySentence = new mySENTENCE();
 		mySentence.concepts = newPhrase;
-		mySentence.score = new BigDecimal(weightSum/count).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
+		mySentence.score = weightSum/count;
 		mySentence.length = newPhrase.size();
 		return mySentence;
 	}

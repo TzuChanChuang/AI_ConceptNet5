@@ -37,7 +37,7 @@ public class DATABASE {
 				database.createStmt();
 				
 				//List<myDATA> datalist = database.searchTable("apple/%", "%", "%", 1.5);
-				List<myDATA> datalist2 = database.searchTable("%", "%", "apple%", 2, false);
+				List<myDATA> datalist2 = database.searchTable("go/v%", "%", "%", 1, false);
 				
 				/*System.out.println("datalist1");
 				int i=0;

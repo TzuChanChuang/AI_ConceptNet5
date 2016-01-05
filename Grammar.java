@@ -26,7 +26,8 @@ public class Grammar {
 			try {
 				Grammar grammar = new Grammar();
 				
-				System.out.println(grammar.verbConversionPassiveType(verbInput, nounInput));
+				//System.out.println(grammar.verbConversionPassiveType(verbInput, nounInput));
+				System.out.println(grammar.isPlural(nounInput));
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -260,7 +261,23 @@ public class Grammar {
 		return ans;
 	}
 	
-	public boolean isCVC(String suffixFragment){ //子音＋母音＋子音 CVC
+	public String AorAn(String noun){
+		if(noun.charAt(0)=='a' || noun.charAt(0)=='e' || noun.charAt(0)=='i' || noun.charAt(0)=='o' || noun.charAt(0)=='u')
+			return "an";
+		return "a";
+	}
+	
+	public String addING(String verb){
+		
+		String[] token = verb.split("_");
+		String output = token[0]+"ing";
+		for(int i=1; i<token.length; i++)
+			output = output + "_" + token[i];
+		return output;
+		
+	}
+	
+	public boolean isCVC(String suffixFragment){ //摮嚗�嚗� CVC
 		
 		boolean ans=false;
 		
