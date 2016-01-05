@@ -26,6 +26,10 @@ public class Part1 {
 			}
 			if(state_return==1) t_b-=0.5;
 			else if(state_return==2) t_f-=0.5;
+			else if(state_return==3) {
+					t_f-=0.5;
+					t_b-=0.5;
+			}
 		}
 		
 	}

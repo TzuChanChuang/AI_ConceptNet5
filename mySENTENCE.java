@@ -19,7 +19,12 @@ public class mySENTENCE {
 		
 
 		for (int i=0; i<concepts.size()-1; i=i+2){
-
+			//§â"//"®³±¼
+			String[] token = concepts.get(i).split("/");
+			concepts.set(i, token[0]);
+			token = concepts.get(i+2).split("/");
+			concepts.set(i+2, token[0]);
+			
 			//conceptA rel conceptB 
 			//     i       i+1    i+2
 			

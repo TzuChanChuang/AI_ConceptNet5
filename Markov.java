@@ -88,9 +88,15 @@ public class Markov {
 		// random concepts
 		System.out.println("----------------generatl sentences----------------");
 		List<mySENTENCE> mySentenceList = new ArrayList<>();
+		int time=0;
 		while(mySentenceList.size()<=num_sentence){
 			mySENTENCE mySentence = generateConcepets();
 			if(mySentence.isSentence(1, this.concept, ""))mySentenceList.add(mySentence);
+			time++;
+			if(time>100) {
+				//System.out.println("stop in loop");
+				return 3;
+			}
 		}
         // ®Ú¾Úrel³y¥y
         for (int i=0; i<mySentenceList.size(); i++){
@@ -191,6 +197,11 @@ public class Markov {
 			
 			// break
 			if(wordSelection==null)break;
+			
+			// random break
+			if(rnd.nextInt(3)==1) break;
+			
+			//next
 			wordSelectionLen = wordSelection.size();	
 		}
 		
