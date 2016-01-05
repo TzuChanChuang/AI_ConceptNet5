@@ -8,13 +8,16 @@ public class mySENTENCE {
 	public String sentence="";
 	public int length;
 	public double score;
+	public DATABASE database; 
 	
-	public void buildSentence(){
+	public void buildSentence(DATABASE database){
+		this.database = database;
 		Grammar grammar = new Grammar();
 		String VorN;
 		int main = 0, which =0, from = 0;
 		String subjectTerm = "";
 		
+
 		for (int i=0; i<concepts.size()-1; i=i+2){
 
 			//conceptA rel conceptB 
@@ -107,7 +110,7 @@ public class mySENTENCE {
 						subjectTerm = "you";
 					}
 					else if(which==0){
-						sentence = sentence + "which " +subjectTerm+ " can use "+ VorN+" " + concepts.get(i+2) + " ";
+						sentence = sentence + "which you can use "+ VorN+" " + concepts.get(i+2) + " ";
 						which++;
 					}
 					else 
@@ -263,6 +266,7 @@ public class mySENTENCE {
 						which++;
 					}
 					main++;
+					break;
 				case "HasA":
 					if(main==0) {
 						sentence =  concepts.get(i) + " "+grammar.verbConversionNowType("have", concepts.get(i))+" "+grammar.AorAn(concepts.get(i+2))+" " + concepts.get(i+2) +" ";
@@ -581,16 +585,10 @@ public class mySENTENCE {
 	}
 	
 	public boolean isVerb(String concept){
-		DATABASE database = new DATABASE();
 		int v_num = 0;
 		int n_num = 0;
-		
-		// open database
+				
 		try {
-			database.buildSQLite();
-			database.connDB("ConceptNet_en");
-			database.createStmt();
-
 			List<myDATA> datalist = database.searchTable("%", "%", concept+ "/v%", 1, false);
 			v_num = datalist.size();
 			datalist = database.searchTable(concept + "/v%", "%", "%", 1, false);
@@ -599,10 +597,6 @@ public class mySENTENCE {
 			n_num = datalist.size();
 			datalist = database.searchTable(concept + "/n%", "%", "%", 1, false);
 			n_num = n_num + datalist.size();
-
-			// close database
-			database.closeStmt();
-			database.disconnDB();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

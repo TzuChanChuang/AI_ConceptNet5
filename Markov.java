@@ -25,7 +25,7 @@ public class Markov {
 	}
 	
 	// one concept
-	public void one_concept_question() throws Exception{
+	public int one_concept_question(double threshold_b, double threshold_f) throws Exception{
 		DATABASE database = new DATABASE();
 		List<String> query = new ArrayList<>();
 		List<String> relationList= new ArrayList<>();
@@ -40,56 +40,50 @@ public class Markov {
 		startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept);
 		
 		//open database
+		System.out.println("----------------open SQLite----------------");
 		database.buildSQLite();
 		database.connDB("ConceptNet_en");
 		database.createStmt();
 		
 		/*handle hash map*/
 		// 做出concept的關係hash map
-		System.out.println("----------------after levels----------------");
+		// 以concept=end 往前一層
+		System.out.println("----------------before levels----------------");
+		// Get some words from database
+		List<myDATA> datalist = database.searchTable("%", "%", concept, threshold_f,false);
+		// put intorelationList and handle _start
+		for (int i = 0; i < datalist.size(); i++) {
+			System.out.println(datalist.get(i).start);
+			startWords.add(datalist.get(i).start);
+			relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+		}
+		// 如果查不到東西
+		if (datalist.size() == 0) return 2;
 		// 以concept=start 往後兩層
+		System.out.println("----------------after levels----------------");
 		query.add(this.concept);
 		int index = 0;
 		while(index<query.size()) {
-			
 			// Get some words from database
-			List<myDATA> datalist = database.searchTable(query.get(index), "%", "%", 3, false);
-			
+			datalist = database.searchTable(query.get(index), "%", "%", threshold_b, false);
 			//printf
 			System.out.println(query.get(index));
 			//System.out.println(datalist.size());
-			
 			// put into query and relationList
 			for(int i=0; i<datalist.size(); i++){
 				relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
 				if(index==0 && !query.contains(datalist.get(i).end))
 					query.add(datalist.get(i).end);
 			}
-			
 			index++;
 		}
-		// 以concept=end 往前一層
-		System.out.println("----------------before levels----------------");
-		// Get some words from database
-		List<myDATA> datalist = database.searchTable("%", "%", concept, 3, false);
-		// put intorelationList and handle _start
-		for(int i=0; i<datalist.size(); i++){
-			System.out.println(datalist.get(i).start);
-			startWords.add(datalist.get(i).start);
-			relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
-		}
+		//如果查不到東西 return
+		if(query.size()<2) return 1;
 		// handle _start
 		markovChain.put("_start", startWords);
-		
 		// Add the words to the hash table
-		if(datalist.size()!=0)
-			addRelation(relationList);
-		
-		
-		// close database
-		database.closeStmt();
-		database.disconnDB();
-		
+		addRelation(relationList);
+
 		// 生出句子
 		// random concepts
 		System.out.println("----------------generatl sentences----------------");
@@ -100,7 +94,7 @@ public class Markov {
 		}
         // 根據rel造句
         for (int i=0; i<mySentenceList.size(); i++){
-        	mySentenceList.get(i).buildSentence();
+        	mySentenceList.get(i).buildSentence(database);
         	mySentenceList.get(i).calScore();
         }
 		//sort
@@ -120,7 +114,15 @@ public class Markov {
        		System.out.println(mySentenceList.get(i).score+"  "+mySentenceList.get(i).sentence);
        }
         
+       System.out.println("----------------close SQLite----------------");
+		// close database
+		database.closeStmt();
+		database.disconnDB();
 		
+		System.out.println("----------------answer----------------");
+		System.out.println(mySentenceList.get(0).sentence);
+		
+		return 0;
 	}
 	
 	
