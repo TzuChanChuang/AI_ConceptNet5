@@ -135,11 +135,13 @@ public class mySENTENCE {
 						return;
 					break;
 				case "HasSubevent":
+					if(concepts.get(i+2).length()>4 && concepts.get(i+2).substring(0, 4)=="you_") 
+						concepts.set(i+2, concepts.get(i+2).substring(4, concepts.get(i+2).length()));
 					if(main==0){
 						sentence = "When you "+concepts.get(i) + ", you may " + concepts.get(i+2) +" ";
 						subjectTerm = "you";
 					}
-					else sentence = sentence + "and then "+subjectTerm+" may " + concepts.get(i+2) + " ";
+					else sentence = sentence + "and then "+ "you" +" may " + concepts.get(i+2) + " ";
 					main++;
 					break;
 				case "HasPrerequisite":
