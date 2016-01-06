@@ -529,7 +529,7 @@ public class mySENTENCE {
 					break;
 				case "SymbolOf":
 					if(main==0) {
-						sentence = sentence +concepts.get(i) + " may be the symbol of" + concepts.get(i+2) +" ";
+						sentence = sentence +concepts.get(i) + " may be the symbol of " + concepts.get(i+2) +" ";
 						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){

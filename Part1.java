@@ -36,7 +36,7 @@ public class Part1 {
 			t_b = 2; t_f = 2;
 		}
 		else{
-			t_b=2.5; t_f=2.5;
+			t_b=2; t_f=2;
 		}
 		while(state_return!=0){
 			System.out.println("----------------Markov "+t_b+" "+t_f+"----------------");

@@ -146,6 +146,7 @@ public class Markov {
 						if(!datalist.get(i).end.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 					}
 				}
+System.out.println("22222222222222222222222222222222");
 			}
 			//if A_f has B_b (B-?-A)
 			for(int x=0; x<ListB_b.size(); x++){ //ListB_b index
@@ -164,6 +165,7 @@ public class Markov {
 							if(!ListB_b.get(x).equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 						}
 					}
+System.out.println("33333333333333333333333333333333  " );
 				}
 			}
 			//if A_b has B  (A-B)
@@ -181,6 +183,7 @@ public class Markov {
 						if(!datalist.get(i).end.equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 					}
 				}
+System.out.println("4444444444444444444444444444444444");
 			}
 			//if A_b has B_f (A-?-B)
 			for(int x=0; x<ListB_f.size(); x++){ //ListB_f index
@@ -199,6 +202,7 @@ public class Markov {
 							if(!ListB_f.get(x).equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 						}
 					}
+System.out.println("555555555555555555555555555555555");
 				}
 			}
 			//A_f B_f ,¥[¤J_start

@@ -36,8 +36,8 @@ public class DATABASE {
 				database.connDB("ConceptNet_en");
 				database.createStmt();
 				
-				List<myDATA> datalist = database.searchTable("refrigerator%", "IsA", "%", 1, false);
-				//List<myDATA> datalist2 = database.searchTable("%", "UsedFor", "buy_book", 1, false);
+				List<myDATA> datalist = database.searchTable("sparrow", "IsA", "%", 0, false);
+				//List<myDATA> datalist2 = database.searchTable("go/v%", "%", "%", 1, false);
 				
 				System.out.println("datalist1");
 				int i=0;
@@ -45,16 +45,16 @@ public class DATABASE {
 					System.out.println( datalist.get(i).start + " " + datalist.get(i).rel + " " + datalist.get(i).end + " w" + datalist.get(i).weight);
 					i++;
 				}
+				/*
 				System.out.println("datalist2");
-				i=0;
-				/*while(i<datalist2.size()){
+				int i=0;
+				while(i<datalist2.size()){
 					System.out.println( datalist2.get(i).start + " " + datalist2.get(i).rel + " " + datalist2.get(i).end + " w" + datalist2.get(i).weight);
 					i++;
 				}
+				//System.out.println("datalist1 size="+datalist.size());
+				System.out.println("datalist2 size="+datalist2.size());
 				*/
-				System.out.println("datalist1 size="+datalist.size());
-				//System.out.println("datalist2 size="+datalist2.size());
-				
 				//close database
 				database.closeStmt();
 				database.disconnDB();
