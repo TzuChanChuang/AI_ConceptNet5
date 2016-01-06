@@ -34,10 +34,10 @@ public class Markov {
 		// Create the first two entries (k:_start, k:_end)
 		markovChain.put("_start", new Vector<String>());
 		markovChain.put("_end", new Vector<String>());
-		//рconcept _start い
+		//把concept放入 _start 中
 		Vector<String> startWords = markovChain.get("_start");
 		startWords.add(this.concept);
-		// 糤セinput conceptstartゑ
+		// 增加原本input concept的start比重
 		startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept);
 		
 		//open database
@@ -47,8 +47,8 @@ public class Markov {
 		database.createStmt();
 			
 		/*handle hash map*/
-		// 暗concept闽玒hash map
-		// concept=end ┕玡糷
+		// 做出concept的關係hash map
+		// 以concept=end 往前一層
 		System.out.println("----------------before levels----------------");
 		// Get some words from database
 		List<myDATA> datalist = database.searchTable("%", "%", concept, threshold_f,false);
@@ -58,9 +58,9 @@ public class Markov {
 			startWords.add(datalist.get(i).start);
 			if(!datalist.get(i).end.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 		}
-		// 狦琩ぃ狥﹁
+		// 如果查不到東西
 		if (datalist.size() == 0) return 2;
-		// concept=start ┕ㄢ糷
+		// 以concept=start 往後兩層
 		System.out.println("----------------after levels----------------");
 		query.add(this.concept);
 		int index = 0;
@@ -79,7 +79,7 @@ public class Markov {
 			}
 			index++;
 		}
-		//狦琩ぃ狥﹁ return
+		//如果查不到東西 return
 		if(query.size()<2) return 1;
 		// handle _start
 		markovChain.put("_start", startWords);
@@ -87,7 +87,7 @@ public class Markov {
 		if(!relationList.isEmpty())addRelation(relationList);
 		else return 3;
 
-		// ネ
+		// 生出句子
 		// random concepts
 		System.out.println("----------------generatl sentences----------------");
 		List<mySENTENCE> mySentenceList = new ArrayList<>();
@@ -102,7 +102,7 @@ public class Markov {
 				return 3;
 			}
 		}
-        // 沮rel硑
+        // 根據rel造句
         for (int i=0; i<mySentenceList.size(); i++){
         	mySentenceList.get(i).buildSentence(database);
         	mySentenceList.get(i).calScore();
@@ -136,7 +136,7 @@ public class Markov {
 	}
 	
 	
-	// рrelation listkey-concpethash map list┏
+	// 把relation list放入key-concpet的hash map list底下
 	public void addRelation(List<String> relation_list){
 		int i=0;
 		
@@ -181,7 +181,7 @@ public class Markov {
 		nextWord = startWords.get(rnd.nextInt(startWordsLen));
 		newPhrase.add(nextWord);
 		Vector<String> wordSelection = markovChain.get(nextWord);
-		if(wordSelection==null) return null; //Τㄇ_start⊿Τnext
+		if(wordSelection==null) return null; //因為有些_start沒有next
 		int wordSelectionLen = wordSelection.size();
 		
 		// Keep looping through the words until we've reached the end
@@ -195,7 +195,7 @@ public class Markov {
 			newPhrase.add(words[1]); newPhrase.add(words[2]);
 			wordSelection = markovChain.get(nextWord);
 			
-			//魁计のweight sum
+			//紀錄個數及weight sum
 			weightSum += Double.parseDouble(words[3]);
 			count++;
 			
@@ -209,7 +209,7 @@ public class Markov {
 			wordSelectionLen = wordSelection.size();	
 		}
 		
-		// print 挡狦
+		// print 結果
 		//System.out.println(newPhrase.toString() +"\n" + "AvgWeight: "+weightSum/count + " length: " + newPhrase.size());
 		
 		//return 
