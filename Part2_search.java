@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -6,6 +7,7 @@ public class Part2_search {
 	private String question, concept1, concept2;
 	private String ans;
 	DATABASE database = new DATABASE();
+	
 	public Part2_search(String[] token) throws Exception{
 		
 		this.question = token[0];
@@ -41,39 +43,55 @@ public class Part2_search {
 			this.concept2 = token[2];
 			ans = rel();
 		}
+		
+		// printf
+		System.out.println("----------------answer----------------");
+		System.out.println(ans);
+		
 	}
 	
 	public String what() throws Exception{
 		System.out.println("----------------IsA, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist = database.searchTable(concept1, "IsA", "%", 2,false);
+		List<myDATA> datalist = database.searchTable(concept1, "IsA", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist.size(); i++) {
 			myDATA data_temp = datalist.get(i);
 			data_temp.weight = data_temp.weight+1.5;
 			datalist.set(i, data_temp);
-			System.out.println(datalist.get(i).start);
+			System.out.println(datalist.get(i).end);
 		}
 		System.out.println("----------------DefinedAs, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist2 = database.searchTable(concept1, "InstanceOf", "%", 2,false);
+		List<myDATA> datalist2 = database.searchTable(concept1, "InstanceOf", "%", 1.5,false);
+		// put intorelationList and handle _start
+		for (int i = 0; i < datalist2.size(); i++) {
+			myDATA data_temp = datalist2.get(i);
+			data_temp.weight = data_temp.weight+0.8;
+			datalist2.set(i, data_temp);
+			System.out.println(datalist2.get(i).end);
+		}
+		datalist.addAll(datalist2);
+		System.out.println("----------------PartOf, after level----------------");
+		// Get some words from database
+		 datalist2 = database.searchTable(concept1, "PartOf", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
 			data_temp.weight = data_temp.weight+1;
 			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).start);
+			System.out.println(datalist2.get(i).end);
 		}
 		datalist.addAll(datalist2);
-		System.out.println("----------------PartOf, after level----------------");
+		System.out.println("----------------MadeOf, after level----------------");
 		// Get some words from database
-		 datalist2 = database.searchTable(concept1, "PartOf", "%", 2,false);
+		 datalist2 = database.searchTable(concept1, "MadeOf", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight+1.2;
+			data_temp.weight = data_temp.weight+1;
 			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).start);
+			System.out.println(datalist2.get(i).end);
 		}
 		datalist.addAll(datalist2);
 		
@@ -92,7 +110,11 @@ public class Part2_search {
         });
         
 		// 如果查不到東西
-		if (datalist.size() == 0) ans="Not sure";
+		if (datalist.size() == 0) {
+			ans="Not sure";
+		}else{
+			ans = datalist.get(0).end;
+		}
 		return ans;
 	}
 	public String when(){
@@ -127,8 +149,94 @@ public class Part2_search {
 		
 		return ans;
 	}
-	public String rel(){
+	public String rel() throws Exception{
 		
-		return ans;
+		System.out.println("----------------rel, first search----------------");
+		// Get some words from database
+		List<myDATA> datalist = database.searchTable(concept1, question, concept2, 1.5,false);
+		List<myDATA> datalist2 = database.searchTable(concept2, question, concept1, 1.5,false);
+		// put intorelationList and handle _start
+		if(datalist.size()!=0 || datalist2.size()!=0)
+			return "Yes";
+		
+		System.out.println("----------------rel, second search----------------");
+		// ?-A-?
+		List<String> listA = new ArrayList<>();
+		List<String> listB = new ArrayList<>();
+		// after
+		List<myDATA> datalistA = database.searchTable(concept1, "IsA", "%", 1.5,false);
+		datalist2 = database.searchTable(concept1, "PartOf", "%", 1.5,false);
+		datalistA.addAll(datalist2);
+		datalist2 = database.searchTable(concept1, "SimilarTo", "%", 1.5,false);
+		datalistA.addAll(datalist2);
+		for(int i=0; i<datalistA.size(); i++){
+			listA.add(datalistA.get(i).end);
+		}
+		// before
+		datalistA = database.searchTable("%", "IsA", concept1, 1.5,false);
+		datalist2 = database.searchTable("%", "PartOf", concept1, 1.5,false);
+		datalistA.addAll(datalist2);
+		datalist2 = database.searchTable("%", "SimilarTo", concept1, 1.5,false);
+		datalistA.addAll(datalist2);
+		for(int i=0; i<datalistA.size(); i++){
+			listA.add(datalistA.get(i).start);
+		}
+		// datalistA has B?
+		for(int i=0; i<listA.size(); i++){
+			datalist2 = database.searchTable(listA.get(i), question, concept2, 1.5,false);
+			if(datalist2.size()!=0){
+				return "Yes";
+			}
+			datalist2 = database.searchTable(concept2, question, listA.get(i), 1.5,false);
+			if(datalist2.size()!=0){
+				return "Yes";
+			}
+		}
+		// ?-B-?
+		List<myDATA> datalistB = database.searchTable(concept2, "IsA", "%", 1.5,false);
+		datalist2 = database.searchTable(concept2, "PartOf", "%", 1.5,false);
+		datalistB.addAll(datalist2);
+		datalist2 = database.searchTable(concept2, "SimilarTo", "%", 1.5,false);
+		datalistB.addAll(datalist2);
+		for(int i=0; i<datalistB.size(); i++){
+			listB.add(datalistB.get(i).end);
+		}
+		// before
+		datalistB = database.searchTable("%", "IsA", concept2, 1.5,false);
+		datalist2 = database.searchTable("%", "PartOf", concept2, 1.5,false);
+		datalistB.addAll(datalist2);
+		datalist2 = database.searchTable("%", "SimilarTo", concept2, 1.5,false);
+		datalistB.addAll(datalist2);
+		for(int i=0; i<datalistB.size(); i++){
+			listB.add(datalistB.get(i).start);
+		}
+		// datalistA has B?
+		for(int i=0; i<datalistB.size(); i++){
+			datalist2 = database.searchTable(listB.get(i), question, concept1, 1.5,false);
+			if(datalist2.size()!=0){
+				return "Yes";
+			}
+			datalist2 = database.searchTable(concept1, question, listB.get(i), 1.5,false);
+			if(datalist2.size()!=0){
+				return "Yes";
+			}
+		}
+		// A-?-?-B
+		for(int i=0; i<listA.size(); i++){
+			for(int j=1; j<listB.size(); j++){
+				datalist = database.searchTable(listA.get(i), question, listB.get(j), 1.5, false);
+				if(datalist.size()!=0){
+					return "Yes";
+				}
+				datalist = database.searchTable(listB.get(j), question, listA.get(i), 1.5, false);
+				if(datalist.size()!=0){
+					return "Yes";
+				}
+				
+			}
+		}
+		
+		return "No";
+
 	}
 }
