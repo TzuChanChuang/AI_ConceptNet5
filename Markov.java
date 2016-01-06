@@ -13,19 +13,20 @@ import java.util.Comparator;
 
 public class Markov {
 	
-	private String concept;	
+	private String concept, concept2;	
 	// Hashmap
 	public static Hashtable<String, Vector<String>> markovChain = new Hashtable<String, Vector<String>>();
 	static Random rnd = new Random();
 	
 	public int num_sentence = 20;
 	
-	public Markov(String concept){
+	public Markov(String concept, String concept2){
 		this.concept = concept;
+		this.concept2 = concept2;
 	}
 	
 	// one concept
-	public int one_concept_question(double threshold_b, double threshold_f) throws Exception{
+	public int question(int question, double threshold_b, double threshold_f) throws Exception{
 		DATABASE database = new DATABASE();
 		List<String> query = new ArrayList<>();
 		List<String> relationList= new ArrayList<>();
@@ -44,7 +45,7 @@ public class Markov {
 		database.buildSQLite();
 		database.connDB("ConceptNet_en");
 		database.createStmt();
-		
+			
 		/*handle hash map*/
 		// 做出concept的關係hash map
 		// 以concept=end 往前一層
