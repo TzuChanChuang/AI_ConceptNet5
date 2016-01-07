@@ -110,17 +110,10 @@ public class Part2_search {
         });
         
 		// 如果查不到東西
-        ans = "";
 		if (datalist.size() == 0) {
 			ans="Not sure";
-		}else if(datalist.size() <5){
-			for(int i=0; i<datalist.size(); i++){
-				ans += datalist.get(i).end +" w="+ datalist.get(i).weight+"\n";
-			}
 		}else{
-			for(int i=0; i<5; i++){
-				ans += datalist.get(i).end +" w="+ datalist.get(i).weight+"\n";
-			}
+			ans = datalist.get(0).end;
 		}
 		return ans;
 	}
@@ -128,72 +121,8 @@ public class Part2_search {
 		
 		return ans;
 	}
-	public String where() throws Exception{
-		System.out.println("----------------AtLocation, after level----------------");
-		// Get some words from database
-		List<myDATA> datalist = database.searchTable(concept1, "AtLocation", "%", 1.5,false);
-		// put intorelationList and handle _start
-		for (int i = 0; i < datalist.size(); i++) {
-			myDATA data_temp = datalist.get(i);
-			data_temp.weight = data_temp.weight+1;
-			datalist.set(i, data_temp);
-			System.out.println(datalist.get(i).end);
-		}
-		System.out.println("---------------UsedFor, before level----------------");
-		// Get some words from database
-		List<myDATA> datalist2 = database.searchTable("%", "UsedFor", concept1, 1.5,false);
-		// put intorelationList and handle _start
-		for (int i = 0; i < datalist2.size(); i++) {
-			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight;
-			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).start);
-		}
-		datalist.addAll(datalist2);
-		System.out.println("---------------LocationOfAction, after level----------------");
-		// Get some words from database
-		datalist2 = database.searchTable(concept1, "LocationOfAction", "%", 1.5,false);
-		// put intorelationList and handle _start
-		for (int i = 0; i < datalist2.size(); i++) {
-			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight+4;
-			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).end);
-		}
-		datalist.addAll(datalist2);
-		//sort
-        Collections.sort(datalist,
-        new Comparator<myDATA>() {
-            public int compare(myDATA o1, myDATA o2) {
-                if(o1.weight<o2.weight)
-                	return 1;
-                if(o1.weight==o2.weight)
-                	return 0;
-                return -1;
-            }
-        });
-        
-		// 如果查不到東西
-        ans = "";
-		if (datalist.size() == 0) {
-			ans="here";
-		}else if (datalist.size() <5){
-			for(int i=0; i<datalist.size(); i++){
-				if(datalist.get(i).end.equals(concept1)){
-					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
-				}else{
-					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
-				}
-			}
-		}else{
-			for(int i=0; i<5 ; i++){
-				if(datalist.get(i).end.equals(concept1)){
-					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
-				}else{
-					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
-				}
-			}
-		}
+	public String where(){
+		
 		return ans;
 	}
 	public String why(){
