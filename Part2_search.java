@@ -76,17 +76,6 @@ public class Part2_search {
 			System.out.println(datalist2.get(i).end);
 		}
 		datalist.addAll(datalist2);
-		System.out.println("----------------PartOf, after level----------------");
-		// Get some words from database
-		 datalist2 = database.searchTable(concept1, "PartOf", "%", 1.5,false);
-		// put intorelationList and handle _start
-		for (int i = 0; i < datalist2.size(); i++) {
-			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight+1;
-			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).end);
-		}
-		datalist.addAll(datalist2);
 		System.out.println("----------------MadeOf, after level----------------");
 		// Get some words from database
 		 datalist2 = database.searchTable(concept1, "MadeOf", "%", 1.5,false);
@@ -99,7 +88,29 @@ public class Part2_search {
 		}
 		datalist.addAll(datalist2);
 		
-		
+		// check part of
+		System.out.println("----------------PartOf, after level----------------");
+		// Get some words from database
+		List<myDATA> datalist_partof = database.searchTable(concept1, "PartOf", "%", 1.5,false);
+		// put intorelationList and handle _start
+		for (int j = 0;j < datalist_partof.size(); j++) {
+			// modify datalist
+			for(int i=0; i<datalist.size(); i++){
+				if (datalist.get(i).end.equals(datalist_partof.get(j).end)) {
+					myDATA data_temp = datalist.get(i);
+					data_temp.end = "part of " + data_temp.end;
+					data_temp.weight = (data_temp.weight + datalist_partof.get(j).weight) / 2;
+					datalist.set(i, data_temp);
+				}
+			}
+			// modify partof concept data 
+			myDATA data_temp = datalist_partof.get(j);
+			data_temp.weight = data_temp.weight+1;
+			data_temp.end = "part of " + data_temp.end;
+			datalist_partof.set(j, data_temp);
+			System.out.println(datalist_partof.get(j).end);
+		}
+		datalist.addAll(datalist_partof);
 		
 		//sort
         Collections.sort(datalist,
@@ -307,6 +318,7 @@ public class Part2_search {
 		
 		return ans;
 	}
+	
 	public String is() throws Exception{
 		List<String> listA_b = new ArrayList<>();
 		List<String> listB_f = new ArrayList<>();
@@ -315,9 +327,37 @@ public class Part2_search {
 		if(concept1.equals(concept2))
 			return "Yes";
 		
+		
+		System.out.println("----------------is, Antonym search----------------");
+		// A_b
+		List<myDATA> datalistA = database.searchTable(concept1, "Antonym", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "No";
+		// B_f
+		List<myDATA> datalistB = database.searchTable("%", "Antonym", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "No";
+		// »¥Ïàcontain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "No";
+			}
+		}
+		
+		listA_b = new ArrayList<>();
+		listB_f = new ArrayList<>();
 		System.out.println("----------------is, IsA search----------------");
 		//A_b
-		List<myDATA> datalistA = database.searchTable(concept1, "IsA", "%", 1.5,false);
+		datalistA = database.searchTable(concept1, "IsA", "%", 1.5,false);
 		for(int i=0; i<datalistA.size(); i++){
 			String[] token = datalistA.get(i).end.split("/");
 			listA_b.add(token[0]);
@@ -325,7 +365,7 @@ public class Part2_search {
 		}
 		if(listA_b.contains(concept2)) return "Yes";
 		//B_f
-		List<myDATA> datalistB = database.searchTable("%", "IsA", concept2, 1.5,false);
+		datalistB = database.searchTable("%", "IsA", concept2, 1.5,false);
 		for(int i=0; i<datalistB.size(); i++){
 			String[] token = datalistB.get(i).start.split("/");		
 			listB_f.add(token[0]);
@@ -340,6 +380,8 @@ public class Part2_search {
 			}
 		}
 
+		listA_b = new ArrayList<>();
+		listB_f = new ArrayList<>();
 		System.out.println("----------------is, NotIsA search----------------");
 		// A_b
 		datalistA = database.searchTable(concept1, "NotIsA", "%",1.5, false);
@@ -364,7 +406,9 @@ public class Part2_search {
 				return "No";
 			}
 		}
-		
+
+		listA_b = new ArrayList<>();
+		listB_f = new ArrayList<>();
 		System.out.println("----------------is, HasProperty search----------------");
 		//A_b
 		datalistA = database.searchTable(concept1, "HasProperty", "%", 1.5,false);
@@ -387,7 +431,9 @@ public class Part2_search {
 				return "Yes";
 			}
 		}
-		
+
+		listA_b = new ArrayList<>();
+		listB_f = new ArrayList<>();
 		System.out.println("----------------is, NotHasProperty search----------------");
 		// A_b
 		datalistA = database.searchTable(concept1, "NotHasProperty", "%",1.5, false);
@@ -412,7 +458,9 @@ public class Part2_search {
 				return "No";
 			}
 		}
-		
+
+		listA_b = new ArrayList<>();
+		listB_f = new ArrayList<>();
 		System.out.println("----------------is, MadeOf search----------------");
 		// A_b
 		datalistA = database.searchTable(concept1, "MadeOf", "%",1.5, false);
@@ -438,10 +486,64 @@ public class Part2_search {
 			}
 		}
 		
+		listA_b = new ArrayList<>();
+		listB_f = new ArrayList<>();
+		System.out.println("----------------is, DefinedAs search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "DefinedAs", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "Yes";
+		// B_f
+		datalistB = database.searchTable("%", "DefinedAs", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "Yes";
+		// »¥Ïàcontain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "Yes";
+			}
+		}
+		
+		listA_b = new ArrayList<>();
+		listB_f = new ArrayList<>();
+		System.out.println("----------------is, Synonym search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "Synonym", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "Yes";
+		// B_f
+		datalistB = database.searchTable("%", "Synonym", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "Yes";
+		// »¥Ïàcontain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "Yes";
+			}
+		}
 		
 		//else 
 		return "No";
 	}
+	
 	public String does() throws Exception{
 		
 		return ans;
