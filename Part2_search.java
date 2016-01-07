@@ -53,7 +53,7 @@ public class Part2_search {
 	public String what() throws Exception{
 		System.out.println("----------------IsA, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist = database.searchTable(concept1, "IsA", "%", 1.5,false);
+		List<myDATA> datalist = database.searchTable(concept1+"%", "IsA", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist.size(); i++) {
 			myDATA data_temp = datalist.get(i);
@@ -63,7 +63,7 @@ public class Part2_search {
 		}
 		System.out.println("----------------DefinedAs, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist2 = database.searchTable(concept1, "InstanceOf", "%", 1.5,false);
+		List<myDATA> datalist2 = database.searchTable(concept1+"%", "InstanceOf", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
@@ -74,7 +74,7 @@ public class Part2_search {
 		datalist.addAll(datalist2);
 		System.out.println("----------------PartOf, after level----------------");
 		// Get some words from database
-		 datalist2 = database.searchTable(concept1, "PartOf", "%", 1.5,false);
+		 datalist2 = database.searchTable(concept1+"%", "PartOf", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
@@ -85,7 +85,7 @@ public class Part2_search {
 		datalist.addAll(datalist2);
 		System.out.println("----------------MadeOf, after level----------------");
 		// Get some words from database
-		 datalist2 = database.searchTable(concept1, "MadeOf", "%", 1.5,false);
+		 datalist2 = database.searchTable(concept1, "MadeOf"+"%", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
@@ -131,7 +131,7 @@ public class Part2_search {
 	public String where() throws Exception{
 		System.out.println("----------------AtLocation, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist = database.searchTable(concept1, "AtLocation", "%", 1.5,false);
+		List<myDATA> datalist = database.searchTable(concept1+"%", "AtLocation", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist.size(); i++) {
 			myDATA data_temp = datalist.get(i);
@@ -141,7 +141,7 @@ public class Part2_search {
 		}
 		System.out.println("---------------UsedFor, before level----------------");
 		// Get some words from database
-		List<myDATA> datalist2 = database.searchTable("%", "UsedFor", concept1, 1.5,false);
+		List<myDATA> datalist2 = database.searchTable("%", "UsedFor", concept1+"%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
@@ -152,7 +152,7 @@ public class Part2_search {
 		datalist.addAll(datalist2);
 		System.out.println("---------------LocationOfAction, after level----------------");
 		// Get some words from database
-		datalist2 = database.searchTable(concept1, "LocationOfAction", "%", 1.5,false);
+		datalist2 = database.searchTable(concept1+"%", "LocationOfAction", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
