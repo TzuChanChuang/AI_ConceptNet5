@@ -110,10 +110,17 @@ public class Part2_search {
         });
         
 		// 如果查不到東西
+        ans = "";
 		if (datalist.size() == 0) {
 			ans="Not sure";
+		}else if(datalist.size() <5){
+			for(int i=0; i<datalist.size(); i++){
+				ans += datalist.get(i).end +" w="+ datalist.get(i).weight+"\n";
+			}
 		}else{
-			ans = datalist.get(0).end;
+			for(int i=0; i<5; i++){
+				ans += datalist.get(i).end +" w="+ datalist.get(i).weight+"\n";
+			}
 		}
 		return ans;
 	}
@@ -167,13 +174,24 @@ public class Part2_search {
         });
         
 		// 如果查不到東西
+        ans = "";
 		if (datalist.size() == 0) {
 			ans="here";
+		}else if (datalist.size() <5){
+			for(int i=0; i<datalist.size(); i++){
+				if(datalist.get(i).end.equals(concept1)){
+					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
+				}else{
+					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
+				}
+			}
 		}else{
-			if(datalist.get(0).end.equals(concept1)){
-				ans = datalist.get(0).start;
-			}else{
-				ans = datalist.get(0).end;
+			for(int i=0; i<5 ; i++){
+				if(datalist.get(i).end.equals(concept1)){
+					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
+				}else{
+					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
+				}
 			}
 		}
 		return ans;
