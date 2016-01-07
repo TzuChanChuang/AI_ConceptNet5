@@ -53,7 +53,7 @@ public class Part2_search {
 	public String what() throws Exception{
 		System.out.println("----------------IsA, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist = database.searchTable(concept1+"%", "IsA", "%", 1.5,false);
+		List<myDATA> datalist = database.searchTable(concept1, "IsA", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist.size(); i++) {
 			myDATA data_temp = datalist.get(i);
@@ -63,7 +63,7 @@ public class Part2_search {
 		}
 		System.out.println("----------------DefinedAs, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist2 = database.searchTable(concept1+"%", "InstanceOf", "%", 1.5,false);
+		List<myDATA> datalist2 = database.searchTable(concept1, "InstanceOf", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
@@ -74,7 +74,7 @@ public class Part2_search {
 		datalist.addAll(datalist2);
 		System.out.println("----------------PartOf, after level----------------");
 		// Get some words from database
-		 datalist2 = database.searchTable(concept1+"%", "PartOf", "%", 1.5,false);
+		 datalist2 = database.searchTable(concept1, "PartOf", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
@@ -85,7 +85,7 @@ public class Part2_search {
 		datalist.addAll(datalist2);
 		System.out.println("----------------MadeOf, after level----------------");
 		// Get some words from database
-		 datalist2 = database.searchTable(concept1, "MadeOf"+"%", "%", 1.5,false);
+		 datalist2 = database.searchTable(concept1, "MadeOf", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
@@ -131,34 +131,40 @@ public class Part2_search {
 	public String where() throws Exception{
 		System.out.println("----------------AtLocation, after level----------------");
 		// Get some words from database
-		List<myDATA> datalist = database.searchTable(concept1+"%", "AtLocation", "%", 1.5,false);
+		List<myDATA> datalist = database.searchTable(concept1, "AtLocation", "%", 1.5,false);
 		// put intorelationList and handle _start
+		if(datalist.size()==0){
+			datalist = database.searchTable(concept1+"%", "AtLocation", "%", 1.5,false);
+		}
 		for (int i = 0; i < datalist.size(); i++) {
 			myDATA data_temp = datalist.get(i);
-			data_temp.weight = data_temp.weight+1;
+			data_temp.weight = data_temp.weight+3.2;
 			datalist.set(i, data_temp);
-			System.out.println(datalist.get(i).end);
+			System.out.println(datalist.get(i).end+" w="+ datalist.get(i).weight);
 		}
 		System.out.println("---------------UsedFor, before level----------------");
-		// Get some words from database
-		List<myDATA> datalist2 = database.searchTable("%", "UsedFor", concept1+"%", 1.5,false);
+		// Get some words from database	
+		List<myDATA> datalist2 = database.searchTable("%", "UsedFor", concept1, 2,false);
+		if(datalist2.size()==0){
+			datalist2 = database.searchTable("%", "UsedFor", concept1+"%", 1.5,false);
+		}
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
 			data_temp.weight = data_temp.weight;
 			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).start);
+			System.out.println(datalist2.get(i).start+" w="+ datalist2.get(i).weight);
 		}
 		datalist.addAll(datalist2);
 		System.out.println("---------------LocationOfAction, after level----------------");
 		// Get some words from database
-		datalist2 = database.searchTable(concept1+"%", "LocationOfAction", "%", 1.5,false);
+		datalist2 = database.searchTable(concept1, "LocationOfAction", "%", 1.5,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight+4;
+			data_temp.weight = data_temp.weight+8;
 			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).end);
+			System.out.println(datalist2.get(i).end+" w="+ datalist2.get(i).weight);
 		}
 		datalist.addAll(datalist2);
 		//sort
@@ -173,13 +179,13 @@ public class Part2_search {
             }
         });
         
-		// 如果查不到東西
-        ans = "";
-		if (datalist.size() == 0) {
+		// 如果查不到東西，第一次查
+		ans = "";
+		if(datalist.size() == 0){	
 			ans="here";
 		}else if (datalist.size() <5){
 			for(int i=0; i<datalist.size(); i++){
-				if(datalist.get(i).end.equals(concept1+"%")){
+				if(datalist.get(i).rel.equals("UsedFor")){
 					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
 				}else{
 					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
@@ -187,7 +193,7 @@ public class Part2_search {
 			}
 		}else{
 			for(int i=0; i<5 ; i++){
-				if(datalist.get(i).end.equals(concept1+"%")){
+				if(datalist.get(i).rel.equals("UsedFor")){
 					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
 				}else{
 					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
