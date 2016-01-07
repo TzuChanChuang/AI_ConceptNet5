@@ -631,14 +631,16 @@ public class mySENTENCE {
 		length = token.length;
 		
 		// score
+		// 加成rel數
 		if(concepts.size()>7)
 			score = score+3;
 		else if(concepts.size()>5 )
 			score = score + 2;
 		else if(concepts.size()>3 )
 			score = score + 1;
-		else
-			score = score;
+		// 加成length數
+		score = score + length*0.06;
+		
 		score = new BigDecimal(score).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
 		if(length<3 || length>15) score = 0;
 		
