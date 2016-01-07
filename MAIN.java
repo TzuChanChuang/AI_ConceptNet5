@@ -16,7 +16,7 @@ public static void main(String[] args) throws Exception {
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		String sInput = in.readLine();
 		
-		while(!sInput.contains("e")){
+		while(!sInput.contains("e")&&!sInput.contains("q")){
 			if(sInput.contains("1")){
 				Part1 mypart1 = new Part1();
 				mypart1.part1();
@@ -26,7 +26,7 @@ public static void main(String[] args) throws Exception {
 				mypart2.part2();
 			}
 			
-			System.out.print("choose question, 1or 2? > ");
+			System.out.print("\n\nchoose question, 1or 2? > ");
 			sInput = in.readLine();
 		}
 		

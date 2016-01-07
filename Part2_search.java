@@ -184,6 +184,10 @@ public class Part2_search {
 		if(concept1.equals("december")) return "twelfth_month_of_year";
 		if(concept1.equals("twelfth_month_of_year")) return "december";
 		if(concept1.equals("last month of the year")) return "december";
+		if(concept1.equals("evening"));
+		if(time_string.contains(concept1)){
+			return concept1;
+		}
 		
 		System.out.println("----------------where, RelatedTo----------------");
 		// ’“≈ctime_string”–relatedtoµƒconcepts
@@ -664,7 +668,7 @@ public class Part2_search {
 	public String how() throws Exception{
 		
 		List<myDATA> datalist = database.searchTable("%", "UsedFor", concept1, 1.5, false);
-		List<myDATA> datalist2 = database.searchTable(concept1, "HasFirstSubevent", "%", 1.0, false);
+		List<myDATA> datalist2 = database.searchTable(concept1, "HasFirstSubevent", "%", 0.0, false);
 		for(int i=0; i<datalist2.size(); i++){
 			myDATA data_temp = datalist2.get(i);
 			data_temp.weight += 2;
