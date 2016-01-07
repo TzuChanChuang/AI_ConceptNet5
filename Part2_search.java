@@ -30,8 +30,6 @@ public class Part2_search {
 			ans = who();
 		}else if(token[0].equals("how")){
 			ans = how();
-		}else if(token[0].equals("has")||token[0].equals("have")){
-			ans = has();
 		}else if(token[0].equals("will")||token[0].equals("can")||token[0].equals("can't")||token[0].equals("cannot")||token[0].equals("do")||token[0].equals("does")){
 			this.concept2 = token[2];
 			ans = can();
@@ -494,7 +492,7 @@ public class Part2_search {
 			ans = "someone";
 		} else if (datalist.size() < 5) {
 			for (int i = 0; i < datalist.size(); i++) {
-				if (datalist.get(i).rel.equals("CreatedBy")||datalist.get(i).rel.equals("IsA")) {
+				if ( datalist.get(i).rel.equals("IsA")) {
 					token_who = datalist.get(i).end.split("/");
 					ans += token_who[0] + " w=" + datalist.get(i).weight + "\n";
 				}else if(datalist.get(i).rel.equals("dbpedia/knownFor")) {
@@ -508,7 +506,7 @@ public class Part2_search {
 			}
 		} else {
 			for (int i = 0; i < 5; i++) {
-				if (datalist.get(i).rel.equals("CreatedBy")||datalist.get(i).rel.equals("IsA")) {
+				if (datalist.get(i).rel.equals("IsA")) {
 					token_who = datalist.get(i).end.split("/");
 					ans += token_who[0] + " w=" + datalist.get(i).weight + "\n";
 				} else if(datalist.get(i).rel.equals("knownFor")) {
@@ -523,11 +521,8 @@ public class Part2_search {
 		}
 		return ans;
 	}
-	public String how() throws Exception{
-		
-		return ans;
-	}
-public String can() throws Exception{
+	
+	public String can() throws Exception{
 		
 		List<String> listA_b = new ArrayList<>();
 		List<String> listB_f = new ArrayList<>();
@@ -630,9 +625,40 @@ public String can() throws Exception{
 		
 		return "No";
 	}
-	public String has() throws Exception{
+
+	public String how() throws Exception{
 		
-		return ans;
+		List<myDATA> datalist = database.searchTable("%", "UsedFor", concept1, 1.5, false);
+		List<myDATA> datalist2 = database.searchTable(concept1, "HasFirstSubevent", "%", 1.0, false);
+		for(int i=0; i<datalist2.size(); i++){
+			myDATA data_temp = datalist2.get(i);
+			data_temp.weight += 2;
+			datalist2.set(i, data_temp);
+		}
+		datalist.addAll(datalist2);
+	
+		
+		//sort
+	    Collections.sort(datalist,
+	    new Comparator<myDATA>() {
+	        public int compare(myDATA o1, myDATA o2) {
+	            if(o1.weight<o2.weight)
+	            	return 1;
+	            if(o1.weight==o2.weight)
+	            	return 0;
+	            return -1;
+	        }
+	    });
+	    // print
+	    int i=0;
+	    while(i<5 && i < datalist.size()){
+	    	if(datalist.get(i).end.equals(concept1)) System.out.println(datalist.get(i).start + " " + datalist.get(i).rel + " " +datalist.get(i).weight);
+	    	else System.out.println(datalist.get(i).end + " " + datalist.get(i).rel + " " +datalist.get(i).weight);
+	    	i++;
+	    }
+	    if(datalist.size()!=0 && datalist.get(0).end.equals(concept1)) return datalist.get(0).start; 
+	    else if(datalist.size()!=0 ) return datalist.get(0).end;
+		return "not sure";
 	}
 	public String is() throws Exception{
 		List<String> listA_b = new ArrayList<>();
