@@ -598,11 +598,11 @@ public class mySENTENCE {
 			score = score + 1;
 		// ¥[¦¨length¼Æ
 		if(length>12)
-			score = score+3;
+			score = score+2.2;
 		else if(length>7 )
-			score = score + 2;
+			score = score + 1.2;
 		else if(length>5 )
-			score = score + 1;
+			score = score + 0.8;
 		
 		score = new BigDecimal(score).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
 		if(length<3 || length>15) score = 0;
