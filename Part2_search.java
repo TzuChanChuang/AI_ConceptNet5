@@ -43,7 +43,11 @@ public class Part2_search {
 			this.concept2 = token[2];
 			ans = rel();
 		}
-		
+		  
+		System.out.println("----------------close SQLite----------------");
+		// close database
+		database.closeStmt();
+		database.disconnDB();
 		// printf
 		System.out.println("----------------answer----------------");
 		System.out.println(ans);
@@ -115,16 +119,18 @@ public class Part2_search {
 			ans="Not sure";
 		}else if(datalist.size() <5){
 			for(int i=0; i<datalist.size(); i++){
-				ans += datalist.get(i).end +" w="+ datalist.get(i).weight+"\n";
+				String[] token = datalist.get(i).end.split("/");
+				ans += token[0] +" w="+ datalist.get(i).weight+"\n";
 			}
 		}else{
 			for(int i=0; i<5; i++){
-				ans += datalist.get(i).end +" w="+ datalist.get(i).weight+"\n";
+				String[] token = datalist.get(i).end.split("/");
+				ans += token[0] +" w="+ datalist.get(i).weight+"\n";
 			}
 		}
 		return ans;
 	}
-	public String when(){
+	public String when() throws Exception{
 		
 		return ans;
 	}
@@ -133,21 +139,27 @@ public class Part2_search {
 		// Get some words from database
 		List<myDATA> datalist = database.searchTable(concept1, "AtLocation", "%", 1.5,false);
 		// put intorelationList and handle _start
+		if(datalist.size()==0){
+			datalist = database.searchTable(concept1+"%", "AtLocation", "%", 1.5,false);
+		}
 		for (int i = 0; i < datalist.size(); i++) {
 			myDATA data_temp = datalist.get(i);
-			data_temp.weight = data_temp.weight+1;
+			data_temp.weight = data_temp.weight+3.2;
 			datalist.set(i, data_temp);
-			System.out.println(datalist.get(i).end);
+			System.out.println(datalist.get(i).end+" w="+ datalist.get(i).weight);
 		}
 		System.out.println("---------------UsedFor, before level----------------");
-		// Get some words from database
-		List<myDATA> datalist2 = database.searchTable("%", "UsedFor", concept1, 1.5,false);
+		// Get some words from database	
+		List<myDATA> datalist2 = database.searchTable("%", "UsedFor", concept1, 2,false);
+		if(datalist2.size()==0){
+			datalist2 = database.searchTable("%", "UsedFor", concept1+"%", 1.5,false);
+		}
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
 			data_temp.weight = data_temp.weight;
 			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).start);
+			System.out.println(datalist2.get(i).start+" w="+ datalist2.get(i).weight);
 		}
 		datalist.addAll(datalist2);
 		System.out.println("---------------LocationOfAction, after level----------------");
@@ -156,11 +168,94 @@ public class Part2_search {
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist2.size(); i++) {
 			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight+4;
+			data_temp.weight = data_temp.weight+8;
 			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).end);
+			System.out.println(datalist2.get(i).end+" w="+ datalist2.get(i).weight);
 		}
 		datalist.addAll(datalist2);
+		//sort
+        Collections.sort(datalist,
+        new Comparator<myDATA>() {
+            public int compare(myDATA o1, myDATA o2) {
+                if(o1.weight<o2.weight)
+                	return 1;
+                if(o1.weight==o2.weight)
+                	return 0;
+                return -1;
+            }
+        });
+        
+		// 如果查不到東西，第一次查
+		ans = "";
+		if(datalist.size() == 0){	
+			ans="here";
+		}else if (datalist.size() <5){
+			for(int i=0; i<datalist.size(); i++){
+				if(datalist.get(i).rel.equals("UsedFor")){
+					String[] token = datalist.get(i).start.split("/");
+					ans += token[0]+" w="+ datalist.get(i).weight+"\n";
+				}else{
+					String[] token = datalist.get(i).end.split("/");
+					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
+				}
+			}
+		}else{
+			for(int i=0; i<5 ; i++){
+				if(datalist.get(i).rel.equals("UsedFor")){
+					String[] token = datalist.get(i).start.split("/");
+					ans += token[0]+" w="+ datalist.get(i).weight+"\n";
+				}else{
+					String[] token = datalist.get(i).end.split("/");
+					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
+				}
+			}
+		}
+		return ans;
+	}
+	public String why() throws Exception{
+		System.out.println("----------------MotivatedByGoal, after level----------------");
+		// Get some words from database
+		List<myDATA> datalist = database.searchTable(concept1, "MotivatedByGoal", "%", 1.5,false);
+		// put intorelationList and handle _start
+		if(datalist.size()==0){
+			datalist = database.searchTable(concept1+"%", "MotivatedByGoal", "%", 1.5,false);
+		}
+		for (int i = 0; i < datalist.size(); i++) {
+			myDATA data_temp = datalist.get(i);
+			data_temp.weight = data_temp.weight+1.5;
+			datalist.set(i, data_temp);
+			System.out.println(datalist.get(i).end+" w="+ datalist.get(i).weight);
+		}
+		
+		System.out.println("---------------CausesDesire, after level----------------");
+		// Get some words from database
+		List<myDATA> datalist2 = database.searchTable(concept1, "CausesDesire", "%", 1.5,false);
+		// put intorelationList and handle _start
+		if(datalist2.size()==0){
+			datalist2 = database.searchTable(concept1+"%", "CausesDesire", "%", 1.5,false);
+		}
+		for (int i = 0; i < datalist2.size(); i++) {
+			myDATA data_temp = datalist2.get(i);
+			data_temp.weight = data_temp.weight;
+			datalist2.set(i, data_temp);
+			System.out.println(datalist2.get(i).end+" w="+ datalist2.get(i).weight);
+		}
+		datalist.addAll(datalist2);
+		System.out.println("---------------Causes, before level----------------");
+		// Get some words from database
+		datalist2 = database.searchTable("%", "Causes", concept1, 1.5,false);
+		// put intorelationList and handle _start
+		if(datalist2.size()==0){
+			datalist2 = database.searchTable("%", "Causes", concept1+"%", 1.5,false);
+		}
+		for (int i = 0; i < datalist2.size(); i++) {
+			myDATA data_temp = datalist2.get(i);
+			data_temp.weight = data_temp.weight;
+			datalist2.set(i, data_temp);
+			System.out.println(datalist2.get(i).start+" w="+ datalist2.get(i).weight);
+		}
+		datalist.addAll(datalist2);
+		
 		//sort
         Collections.sort(datalist,
         new Comparator<myDATA>() {
@@ -176,47 +271,178 @@ public class Part2_search {
 		// 如果查不到東西
         ans = "";
 		if (datalist.size() == 0) {
-			ans="here";
-		}else if (datalist.size() <5){
+			ans="Unknown";
+		}else if(datalist.size() <5){
 			for(int i=0; i<datalist.size(); i++){
-				if(datalist.get(i).end.equals(concept1)){
-					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
+				String[] token;
+				if(datalist.get(i).rel.equals("Causes")){
+					token = datalist.get(i).start.split("/");
 				}else{
-					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
+					token = datalist.get(i).end.split("/");
 				}
+				ans += token[0] +" w="+ datalist.get(i).weight+"\n";
 			}
 		}else{
-			for(int i=0; i<5 ; i++){
-				if(datalist.get(i).end.equals(concept1)){
-					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
+			for(int i=0; i<5; i++){
+				String[] token;
+				if(datalist.get(i).rel.equals("Causes")){
+					token = datalist.get(i).start.split("/");
 				}else{
-					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
+					token = datalist.get(i).end.split("/");
 				}
+				ans += token[0] +" w="+ datalist.get(i).weight+"\n";
 			}
 		}
 		return ans;
 	}
-	public String why(){
+	public String who() throws Exception{
 		
 		return ans;
 	}
-	public String who(){
+	public String how() throws Exception{
 		
 		return ans;
 	}
-	public String how(){
+	public String can() throws Exception{
 		
 		return ans;
 	}
-	public String can(){
+	public String is() throws Exception{
+		List<String> listA_b = new ArrayList<>();
+		List<String> listB_f = new ArrayList<>();
 		
-		return ans;
-	}
-	public String is(){
+		// special
+		if(concept1.equals(concept2))
+			return "Yes";
 		
-		return ans;
+		System.out.println("----------------is, IsA search----------------");
+		//A_b
+		List<myDATA> datalistA = database.searchTable(concept1, "IsA", "%", 1.5,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+//System.out.println("A " + token[0]);			
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		List<myDATA> datalistB = database.searchTable("%", "IsA", concept2, 1.5,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+//System.out.println("B " + token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		// 互相contain
+		//A_b B_f
+		for(int i=0; i<listA_b.size(); i++){
+			if(listB_f.contains(listA_b.get(i))){
+				return "Yes";
+			}
+		}
+
+		System.out.println("----------------is, NotIsA search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "NotIsA", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "No";
+		// B_f
+		datalistB = database.searchTable("%", "NotIsA", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "No";
+		// 互相contain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "No";
+			}
+		}
+		
+		System.out.println("----------------is, HasProperty search----------------");
+		//A_b
+		datalistA = database.searchTable(concept1, "HasProperty", "%", 1.5,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		datalistB = database.searchTable("%", "HasProperty", concept2, 1.5,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		// 互相contain
+		//A_b B_f
+		for(int i=0; i<listA_b.size(); i++){
+			if(listB_f.contains(listA_b.get(i))){
+				return "Yes";
+			}
+		}
+		
+		System.out.println("----------------is, NotHasProperty search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "NotHasProperty", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "No";
+		// B_f
+		datalistB = database.searchTable("%", "NotHasProperty", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "No";
+		// 互相contain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "No";
+			}
+		}
+		
+		System.out.println("----------------is, MadeOf search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "MadeOf", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "Yes";
+		// B_f
+		datalistB = database.searchTable("%", "MadeOf", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "Yes";
+		// 互相contain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "Yes";
+			}
+		}
+		
+		
+		//else 
+		return "No";
 	}
-	public String does(){
+	public String does() throws Exception{
 		
 		return ans;
 	}
