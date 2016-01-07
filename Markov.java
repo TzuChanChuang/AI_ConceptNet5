@@ -61,10 +61,12 @@ public class Markov {
 		List<myDATA> datalist = database.searchTable("%", "%", concept, threshold_f,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist.size(); i++) {
-			System.out.println(datalist.get(i).start);
-			startWords.add(datalist.get(i).start); startWords.add(this.concept); // 增加原本input concept的start比重
-			ListA_f.add(datalist.get(i).start); //part1_2
-			if(!datalist.get(i).start.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+			if(hasRelationType(datalist.get(i).rel)){
+				System.out.println(datalist.get(i).start);
+				startWords.add(datalist.get(i).start); startWords.add(this.concept); // 增加原本input concept的start比重
+				ListA_f.add(datalist.get(i).start); //part1_2
+				if(!datalist.get(i).start.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+			}
 		}
 		// 如果查不到東西
 		if (datalist.size() == 0) return 2; // 前一層找不到東西
@@ -81,12 +83,14 @@ public class Markov {
 			//System.out.println(datalist.size());
 			// put into query and relationList
 			for(int i=0; i<datalist.size(); i++){
-				if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
-					relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
-				if(question==1 && index==0 && !query.contains(datalist.get(i).end))
-					query.add(datalist.get(i).end);
-				if(index==0) ListA_b.add(datalist.get(i).end); //part1_2 當是再爬A的後一個時
-				if(question==2) System.out.println(datalist.get(i).end);
+				if(hasRelationType(datalist.get(i).rel)){
+					if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
+						relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
+					if(question==1 && index==0 && !query.contains(datalist.get(i).end))
+						query.add(datalist.get(i).end);
+					if(index==0) ListA_b.add(datalist.get(i).end); //part1_2 當是再爬A的後一個時
+					if(question==2) System.out.println(datalist.get(i).end);
+				}
 			}
 			index++;
 		}
@@ -102,10 +106,12 @@ public class Markov {
 			datalist = database.searchTable("%", "%", concept2, threshold_f,false);
 			// put intorelationList and handle _start
 			for (int i = 0; i < datalist.size(); i++) {
-				System.out.println(datalist.get(i).start);
-				//startWords.add(datalist.get(i).start); startWords.add(this.concept2); // 增加原本input concept2的比重
-				ListB_f.add(datalist.get(i).start); //part1_2
-				//if(!datalist.get(i).start.equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+				if(hasRelationType(datalist.get(i).rel)){
+					System.out.println(datalist.get(i).start);
+					//startWords.add(datalist.get(i).start); startWords.add(this.concept2); // 增加原本input concept2的比重
+					ListB_f.add(datalist.get(i).start); //part1_2
+					//if(!datalist.get(i).start.equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+				}
 			}
 			// 如果查不到東西
 			if (datalist.size() == 0) return 2; // 前一層找不到東西
@@ -116,10 +122,12 @@ public class Markov {
 			datalist = database.searchTable(concept2, "%", "%", threshold_b, false);
 			// put into query and relationList
 			for(int i=0; i<datalist.size(); i++){
-				System.out.println(datalist.get(i).end);
-				//if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
-				//	relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
-				ListB_b.add(datalist.get(i).end); //part1_2
+				if(hasRelationType(datalist.get(i).rel)){
+					System.out.println(datalist.get(i).end);
+					//if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
+					//	relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
+					ListB_b.add(datalist.get(i).end); //part1_2
+				}
 			}
 			//如果查不到東西 return
 			if(datalist.size()<2) return 1; // 後二層找不到東西
@@ -128,64 +136,79 @@ public class Markov {
 			relationList = new ArrayList<>();
 			startWords = new Vector<>();
 			
-			// startWords add two concepts
-			startWords.add(concept); startWords.add(concept2);
-			
 			/* 找兩concepts關係 */
 			System.out.println("----------------find two concepts relations----------------");
 			//if A_f has B  (B-A)
 			if(ListA_f.contains(concept2)){
 				datalist = database.searchTable(concept2, "%", concept, threshold_f,false);
 				for (int i = 0; i < datalist.size(); i++) {
-					for(int repeat=0; repeat<10; repeat++){
-						if(!concept2.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+					if(hasRelationType(datalist.get(i).rel)){
+System.out.println("22222222222222222222222222222222");
+						startWords.add(concept2);
+						for(int repeat=0; repeat<10; repeat++){
+							if(!concept2.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						}
 					}
 				}
 				//加入A_b的東西
 				datalist = database.searchTable(concept, "%", "%", threshold_f,false);
 				for (int i = 0; i < datalist.size(); i++) {
-					for(int repeat=0; repeat<10; repeat++){
-						if(!datalist.get(i).end.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+					if(hasRelationType(datalist.get(i).rel)){
+System.out.println("22222222222222222222222222222222");
+						for(int repeat=0; repeat<10; repeat++){
+							if(!datalist.get(i).end.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						}
 					}
 				}
-System.out.println("22222222222222222222222222222222");
 			}
 			//if A_f has B_b (B-?-A)
 			for(int x=0; x<ListB_b.size(); x++){ //ListB_b index
-				if(ListA_f.contains(ListB_b.get(x))){ 
+				if(ListA_f.contains(ListB_b.get(x))){
 					// ?-A
 					datalist = database.searchTable(ListB_b.get(x), "%", concept, threshold_f,false);
 					for (int i = 0; i < datalist.size(); i++) {
-						for(int repeat=0; repeat<10; repeat++){
-							if(!ListB_b.get(x).equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						if(hasRelationType(datalist.get(i).rel)){
+System.out.println("33333333333333333333333333333333  " );
+							startWords.add(concept2);
+							for(int repeat=0; repeat<10; repeat++){
+								if(!ListB_b.get(x).equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+							}
 						}
 					}
 					// B-?
 					datalist = database.searchTable(concept2, "%", ListB_b.get(x), threshold_f,false);
 					for (int i = 0; i < datalist.size(); i++) {
-						for(int repeat=0; repeat<10; repeat++){
-							if(!ListB_b.get(x).equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						if(hasRelationType(datalist.get(i).rel)){
+System.out.println("33333333333333333333333333333333  " );
+							for(int repeat=0; repeat<10; repeat++){
+								if(!ListB_b.get(x).equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+							}
 						}
 					}
-System.out.println("33333333333333333333333333333333  " );
 				}
 			}
 			//if A_b has B  (A-B)
 			if(ListA_b.contains(concept2)){
 				datalist = database.searchTable(concept, "%", concept2, threshold_f,false);
 				for (int i = 0; i < datalist.size(); i++) {
-					for(int repeat=0; repeat<10; repeat++){
-						if(!concept2.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+					if(hasRelationType(datalist.get(i).rel)){
+						startWords.add(concept);
+System.out.println("4444444444444444444444444444444444");
+						for(int repeat=0; repeat<10; repeat++){
+							if(!concept2.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						}
 					}
 				}
 				//加入B_b的東西
 				datalist = database.searchTable(concept2, "%", "%", threshold_f,false);
 				for (int i = 0; i < datalist.size(); i++) {
-					for(int repeat=0; repeat<10; repeat++){
-						if(!datalist.get(i).end.equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+					if(hasRelationType(datalist.get(i).rel)){
+System.out.println("4444444444444444444444444444444444");
+						for(int repeat=0; repeat<10; repeat++){
+							if(!datalist.get(i).end.equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						}
 					}
 				}
-System.out.println("4444444444444444444444444444444444");
 			}
 			//if A_b has B_f (A-?-B)
 			for(int x=0; x<ListB_f.size(); x++){ //ListB_f index
@@ -193,18 +216,24 @@ System.out.println("4444444444444444444444444444444444");
 					// ?-B
 					datalist = database.searchTable(ListB_f.get(x), "%", concept2, threshold_f,false);
 					for (int i = 0; i < datalist.size(); i++) {
-						for(int repeat=0; repeat<10; repeat++){
-							if(!ListB_f.get(x).equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						if(hasRelationType(datalist.get(i).rel)){
+							startWords.add(concept);
+System.out.println("555555555555555555555555555555555");
+							for(int repeat=0; repeat<10; repeat++){
+								if(!ListB_f.get(x).equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+							}
 						}
 					}
 					// A-?
 					datalist = database.searchTable(concept, "%", ListB_f.get(x), threshold_f,false);
 					for (int i = 0; i < datalist.size(); i++) {
-						for(int repeat=0; repeat<10; repeat++){
-							if(!ListB_f.get(x).equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+						if(hasRelationType(datalist.get(i).rel)){
+System.out.println("555555555555555555555555555555555");
+							for(int repeat=0; repeat<10; repeat++){
+								if(!ListB_f.get(x).equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
+							}
 						}
 					}
-System.out.println("555555555555555555555555555555555");
 				}
 			}
 			//A_f B_f ,加入_start
@@ -214,35 +243,46 @@ System.out.println("555555555555555555555555555555555");
 					List<myDATA> datalist2 = database.searchTable(ListA_f.get(x), "%", concept, threshold_f,false);
 					for(int y=0; y<datalist.size(); y++){
 						for(int z=0; z<datalist2.size(); z++){
-							if(!datalist.get(y).start.equals(concept) && !datalist.get(y).start.equals(concept2)){
-								startWords.add(datalist.get(y).start);
-								for(int repeat=0; repeat<10; repeat++){
-									relationList.add(datalist.get(y).start + " " + datalist.get(y).rel + " "+ concept + "_and_" + concept2 + " " + (datalist.get(y).weight+datalist2.get(z).weight)/2);
+							if(hasRelationType(datalist.get(y).rel) && datalist.get(y).rel.equals(datalist2.get(z).rel)){
+								if(!datalist.get(y).start.equals(concept) && !datalist2.get(z).start.equals(concept2)){
+									startWords.add(datalist.get(y).start);
+									for(int repeat=0; repeat<10; repeat++){
+										relationList.add(datalist.get(y).start + " " + datalist.get(y).rel + " "+ concept + "_and_" + concept2 + " " + datalist.get(y).weight);
+									}
 								}
+System.out.println("666666666666666666666666666666666");
 							}
-							
 						}
 					}
-System.out.println("666666666666666666666666666666666");
 				}
 			}
 			//A_b B_b ,加入_start
 			for(int x=0; x<ListA_b.size(); x++){
 				if(ListB_b.contains(ListA_b.get(x))){
-					datalist = database.searchTable( concept2,"%", ListA_b.get(x), threshold_f,false);
-					List<myDATA> datalist2 = database.searchTable( concept, "%", ListA_b.get(x),threshold_f,false);
+					datalist = database.searchTable( concept,"%", ListA_b.get(x), threshold_f,false);
+					List<myDATA> datalist2 = database.searchTable( concept2, "%", ListA_b.get(x),threshold_f,false);
 					for(int y=0; y<datalist.size(); y++){
 						for(int z=0; z<datalist2.size(); z++){
-							if(!datalist.get(y).end.equals(concept) && !datalist.get(y).end.equals(concept2)){
-								startWords.add(concept + "_and_" + concept2 );
-								for(int repeat=0; repeat<10; repeat++){
-									relationList.add(concept + "_and_" + concept2 + " " + datalist.get(y).rel + " "+ datalist.get(y).end + " " + (datalist.get(y).weight+datalist2.get(z).weight)/2);
+							if(hasRelationType(datalist.get(y).rel) && datalist.get(y).rel.equals(datalist2.get(z).rel)){
+								if(!datalist.get(y).end.equals(concept) && !datalist2.get(z).end.equals(concept2)){
+									startWords.add(concept + "_and_" + concept2 );
+									for(int repeat=0; repeat<10; repeat++){
+										relationList.add(concept + "_and_" + concept2 + " " + datalist.get(y).rel + " "+ datalist.get(y).end + " " + datalist.get(y).weight);
+									}
 								}
+System.out.println("7777777777777777777777777777777777");
 							}
-							
+							if(hasRelationType(datalist2.get(z).rel)){//放入B的rel
+								if(!datalist.get(y).end.equals(concept) && !datalist2.get(z).end.equals(concept2)){
+									startWords.add(concept + "_and_" + concept2 );
+									for(int repeat=0; repeat<10; repeat++){
+										relationList.add(concept + "_and_" + concept2 + " " + datalist2.get(z).rel + " "+ datalist2.get(z).end + " " + datalist2.get(z).weight);
+									}
+								}
+System.out.println("7777777777777777777777777777777777");
+							}
 						}
 					}
-System.out.println("7777777777777777777777777777777");
 				}
 			}
 		}
@@ -351,6 +391,7 @@ System.out.println("7777777777777777777777777777777");
 		newPhrase.add(nextWord);
 		Vector<String> wordSelection = markovChain.get(nextWord);
 		if(wordSelection==null) { //因為有些_start沒有next
+System.out.println("wordSelection is null  " +  nextWord + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			return null; 
 		}
 		int wordSelectionLen = wordSelection.size();
@@ -389,5 +430,26 @@ System.out.println("7777777777777777777777777777777");
 		mySentence.score = weightSum/count;
 		mySentence.length = newPhrase.size();
 		return mySentence;
+	}
+	
+	private boolean hasRelationType(String rel){
+		if (rel.equals("RelatedTo") 
+				|| rel.equals("Compoun")
+				|| rel.equals("wordnet/adjectivePertainsTo")
+				|| rel.equals("Attribute")
+				|| rel.equals("dbpedia/influenced")
+				|| rel.equals("dbpedia/notableIdea")
+				|| rel.equals("Entails")
+				|| rel.equals("wordnet/adverbPertainsTo")
+				|| rel.equals("dbpedia/spokenIn")
+				|| rel.equals("dbpedia/languageFamily")
+				|| rel.equals("dbpedia/knowFor")
+				|| rel.equals("wordnet/participleOf")
+				|| rel.equals("dbpedia/field")
+				|| rel.equals("CompoundDerivedFrom")
+				|| rel.equals("NotCauses")){
+			return false;
+		} 
+		return true;
 	}
 }

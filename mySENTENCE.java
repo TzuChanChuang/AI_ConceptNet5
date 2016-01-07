@@ -20,7 +20,7 @@ public class mySENTENCE {
 		
 
 		for (int i=0; i<concepts.size()-1; i=i+2){
-			//把"//"拿掉
+			//р"//"奔
 			String[] token = concepts.get(i).split("/");
 			concepts.set(i, token[0]);
 			token = concepts.get(i+2).split("/");
@@ -29,7 +29,7 @@ public class mySENTENCE {
 			//conceptA rel conceptB 
 			//     i       i+1    i+2
 			
-			// handle XX_and_XX -> 負數
+			// handle XX_and_XX -> 璽计
 			if(concepts.get(i).contains("_and_"))Ns=1;
 			
 			switch (concepts.get(i+1)) {
@@ -620,13 +620,13 @@ public class mySENTENCE {
 	}
 	
 	public void calScore(){
-		//把"_"變成" "
+		//р"_"跑Θ" "
 		sentence = sentence.replace('_',' ');
 		
-		//把最後空白換成句點
+		//р程フ传Θ翴
 		sentence = sentence.substring(0, sentence.length()-1) + ".";
 		
-		//算length
+		//衡length
 		String[] token = sentence.split(" ");
 		length = token.length;
 		
@@ -667,7 +667,7 @@ public class mySENTENCE {
 		return v_num>n_num ;
 	}
 	
-	//回傳concepts是否能組成句子
+	//肚concepts琌舱Θ
 	public boolean isSentence(String concept1, String concept2){
 		if (concepts.contains("RelatedTo") 
 				|| concepts.contains("Compoun")
@@ -684,15 +684,18 @@ public class mySENTENCE {
 				|| concepts.contains("dbpedia/field")
 				|| concepts.contains("CompoundDerivedFrom")
 				|| concepts.contains("NotCauses")) {
+System.out.println("there is not accepted relation type~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 			return false;
 		}	
 		
 		if(!concepts.contains(concept1+"_and_"+concept2)){
 			if(!concepts.contains(concept1)){	
+System.out.println("there is not concept1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 				return false;
 			}
 			if (concept2 != "") {
 				if (!concepts.contains(concept2)) {
+System.out.println("there is not concept1~~~~~~~~~~~~~~~~~~~~~~~~~~~~");					
 					return false;
 				}
 			}
