@@ -149,8 +149,132 @@ public class Part2_search {
 		return ans;
 	}
 	public String when() throws Exception{
+		List<myDATA> ansDatalist = new ArrayList<>();
+		List<String> time_string = new ArrayList<>();
+		time_string.add("morning"); time_string.add("even"); time_string.add("night"); 
+		time_string.add("midnight"); time_string.add("afternoon"); time_string.add( "noon");
+		time_string.add("spring"); time_string.add("autumn"); time_string.add("summer"); time_string.add( "winter");
 		
-		return ans;
+		if(concept1.equals("january")) return "first_month_of_year";
+		if(concept1.equals("first_month_of_year")) return "january";
+		if(concept1.equals("february")) return "second_month_of_year";
+		if(concept1.equals("second_month_of_year")) return "february";
+		if(concept1.equals("month_after_january")) return "february";
+		if(concept1.equals("march")) return "third_month_of_year";
+		if(concept1.equals("third_month_of_year")) return "march";
+		if(concept1.equals("april")) return "fourth_month_of_year";
+		if(concept1.equals("fourth_month_of_year")) return "april";
+		if(concept1.equals("may")) return "fifth_month_of_year";
+		if(concept1.equals("fifth_month_of_year")) return "may";
+		if(concept1.equals("june")) return "sixth_month_of_year";
+		if(concept1.equals("sixth_month_of_year")) return "june";
+		if(concept1.equals("july")) return "seventh_month_of_year";
+		if(concept1.equals("seventh_month_of_year")) return "july";
+		if(concept1.equals("august")) return "eighth_month_of_year";
+		if(concept1.equals("eighth_month_of_year")) return "august";
+		if(concept1.equals("september")) return "ninth_month_of_year";
+		if(concept1.equals("ninth_month_of_year")) return "september";
+		if(concept1.equals("october")) return "tenth_month_of_year";
+		if(concept1.equals("tenth_month_of_year")) return "october";
+		if(concept1.equals("november")) return "eleventh_month_of_year";
+		if(concept1.equals("penultimate_month_of_year")) return "november";
+		if(concept1.equals("eleventh_month_of_year")) return "november";
+		if(concept1.equals("december")) return "twelfth_month_of_year";
+		if(concept1.equals("twelfth_month_of_year")) return "december";
+		if(concept1.equals("last month of the year")) return "december";
+		
+		System.out.println("----------------where, RelatedTo----------------");
+		// ’“≈ctime_string”–relatedtoµƒconcepts
+		//reatedto
+		List<myDATA> datalist = database.searchTable(concept1, "RelatedTo", "%", 0.9, false);
+		for(int i=0; i<datalist.size(); i++){
+			String[] token = datalist.get(i).end.split("/");
+			if(time_string.contains(token[0])){
+				ansDatalist.add(datalist.get(i));
+			}
+		}
+		datalist = database.searchTable(concept1+"/%", "RelatedTo", "%", 0.9, false);
+		for(int i=0; i<datalist.size(); i++){
+			String[] token = datalist.get(i).end.split("/");
+			if(time_string.contains(token[0])){
+				ansDatalist.add(datalist.get(i));
+			}
+		}
+		datalist = database.searchTable("%", "RelatedTo", concept1, 0.9, false);
+		for(int i=0; i<datalist.size(); i++){
+			String[] token = datalist.get(i).start.split("/");
+			if(time_string.contains(token[0])){
+				ansDatalist.add(datalist.get(i));
+			}
+		}
+		datalist = database.searchTable("%", "RelatedTo", concept1+"/%", 0.9, false);
+		for(int i=0; i<datalist.size(); i++){
+			String[] token = datalist.get(i).start.split("/");
+			if(time_string.contains(token[0])){
+				ansDatalist.add(datalist.get(i));
+			}
+		}
+		
+		//sort
+        Collections.sort(ansDatalist,
+        new Comparator<myDATA>() {
+            public int compare(myDATA o1, myDATA o2) {
+                if(o1.weight<o2.weight)
+                	return 1;
+                if(o1.weight==o2.weight)
+                	return 0;
+                return -1;
+            }
+        });
+        //print
+		int i=0;
+		while(i<5 && i<ansDatalist.size()){
+			if(ansDatalist.get(i).start.contains(concept1))System.out.println(ansDatalist.get(i).end + "  " + ansDatalist.get(i).weight);
+			else System.out.println(ansDatalist.get(i).start + "  " + ansDatalist.get(i).weight);
+			i++;
+		}
+		
+		if(ansDatalist.size()!=0){
+			if(ansDatalist.get(0).start.contains(concept1)) ans=ansDatalist.get(0).end;
+			else ans=ansDatalist.get(0).start;
+			if(ans=="even") ans = "evening";
+			String[] token = ans.split("/");
+			return token[0];
+		}
+		
+		System.out.println("----------------where, HasFirstSubevent----------------");
+		datalist = database.searchTable("%", "HasFirstSubevent", concept1, 1.0, false);
+		System.out.println("----------------where, HasSubevent----------------");
+		List<myDATA> datalist1 = database.searchTable("%", "HasSubevent", concept1, 1.0, false);
+		datalist.addAll(datalist1);
+		System.out.println("----------------where, MotivatedByGoal----------------");
+		datalist1 = database.searchTable("%", "MotivatedByGoal", concept1, 1.0, false);
+		datalist.addAll(datalist1);
+		//sort
+        Collections.sort(datalist,
+        new Comparator<myDATA>() {
+            public int compare(myDATA o1, myDATA o2) {
+                if(o1.weight<o2.weight)
+                	return 1;
+                if(o1.weight==o2.weight)
+                	return 0;
+                return -1;
+            }
+        });
+        //print
+		i=0;
+		while(i<5 && i<datalist.size()){
+			System.out.println(datalist.get(i).start + "  " + datalist.get(i).rel + " "+datalist.get(i).weight);
+			i++;
+		}
+		
+		if(datalist.size()!=0){
+			ans=datalist.get(0).start;
+			String[] token = ans.split("/");
+			return token[0];
+		}
+		
+		return "now";
 	}
 	public String where() throws Exception{
 		System.out.println("----------------AtLocation, after level----------------");
