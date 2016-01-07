@@ -85,8 +85,10 @@ public class Markov {
 					startWords.add(this.concept);startWords.add(this.concept);startWords.add(this.concept);
 					if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
 						relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
-					if(question==1 && index==0 && !query.contains(datalist.get(i).end))
-						query.add(datalist.get(i).end);
+					if(question==1 && index==0 && !query.contains(datalist.get(i).end)){
+						String[] token = datalist.get(i).end.split("/");
+						query.add(token[0]);
+					}
 					if(index==0) ListA_b.add(datalist.get(i).end); //part1_2 當是再爬A的後一個時
 					if(question==2) System.out.println(datalist.get(i).end);
 				}
