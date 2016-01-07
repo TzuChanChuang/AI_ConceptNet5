@@ -312,6 +312,7 @@ System.out.println("7777777777777777777777777777777777");
         // ®Ú¾Úrel³y¥y
 		System.out.println("----------------build sentences----------------");
         for (int i=0; i<mySentenceList.size(); i++){
+        	System.out.println("sentence" + (i+1));
         	mySentenceList.get(i).buildSentence(database);
         	mySentenceList.get(i).calScore();
         }
