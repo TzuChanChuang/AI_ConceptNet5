@@ -318,6 +318,7 @@ public class Part2_search {
 		
 		return ans;
 	}
+	
 	public String is() throws Exception{
 		List<String> listA_b = new ArrayList<>();
 		List<String> listB_f = new ArrayList<>();
@@ -453,6 +454,7 @@ public class Part2_search {
 		//else 
 		return "No";
 	}
+	
 	public String does() throws Exception{
 		
 		return ans;
