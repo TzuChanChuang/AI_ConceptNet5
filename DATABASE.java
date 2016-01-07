@@ -36,7 +36,7 @@ public class DATABASE {
 				database.connDB("ConceptNet_en");
 				database.createStmt();
 				
-				List<myDATA> datalist = database.searchTable("buy%", "AtLocation", "%", 0, false);
+				List<myDATA> datalist = database.searchTable("%", "Causes", "eat%", 0, false);
 				//List<myDATA> datalist2 = database.searchTable("go/v%", "%", "%", 1, false);
 				
 				System.out.println("datalist1");
