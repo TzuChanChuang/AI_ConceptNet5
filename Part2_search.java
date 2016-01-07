@@ -76,17 +76,6 @@ public class Part2_search {
 			System.out.println(datalist2.get(i).end);
 		}
 		datalist.addAll(datalist2);
-		System.out.println("----------------PartOf, after level----------------");
-		// Get some words from database
-		 datalist2 = database.searchTable(concept1, "PartOf", "%", 1.5,false);
-		// put intorelationList and handle _start
-		for (int i = 0; i < datalist2.size(); i++) {
-			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight+1;
-			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).end);
-		}
-		datalist.addAll(datalist2);
 		System.out.println("----------------MadeOf, after level----------------");
 		// Get some words from database
 		 datalist2 = database.searchTable(concept1, "MadeOf", "%", 1.5,false);
@@ -99,7 +88,29 @@ public class Part2_search {
 		}
 		datalist.addAll(datalist2);
 		
-		
+		// check part of
+		System.out.println("----------------PartOf, after level----------------");
+		// Get some words from database
+		List<myDATA> datalist_partof = database.searchTable(concept1, "PartOf", "%", 1.5,false);
+		// put intorelationList and handle _start
+		for (int j = 0;j < datalist_partof.size(); j++) {
+			// modify datalist
+			for(int i=0; i<datalist.size(); i++){
+				if (datalist.get(i).end.equals(datalist_partof.get(j).end)) {
+					myDATA data_temp = datalist.get(i);
+					data_temp.end = "part of " + data_temp.end;
+					data_temp.weight = (data_temp.weight + datalist_partof.get(j).weight) / 2;
+					datalist.set(i, data_temp);
+				}
+			}
+			// modify partof concept data 
+			myDATA data_temp = datalist_partof.get(j);
+			data_temp.weight = data_temp.weight+1;
+			data_temp.end = "part of " + data_temp.end;
+			datalist_partof.set(j, data_temp);
+			System.out.println(datalist_partof.get(j).end);
+		}
+		datalist.addAll(datalist_partof);
 		
 		//sort
         Collections.sort(datalist,
