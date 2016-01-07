@@ -18,7 +18,7 @@ public class Markov {
 	public static Hashtable<String, Vector<String>> markovChain = new Hashtable<String, Vector<String>>();
 	static Random rnd = new Random();
 	
-	public int num_sentence = 30;
+	public int num_sentence = 25;
 	
 	public Markov(String concept, String concept2){
 		this.concept = concept;
@@ -83,20 +83,21 @@ public class Markov {
 			for(int i=0; i<datalist.size(); i++){
 				if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
 					relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
-				if(index==0 && !query.contains(datalist.get(i).end))
+				if(question==1 && index==0 && !query.contains(datalist.get(i).end))
 					query.add(datalist.get(i).end);
 				if(index==0) ListA_b.add(datalist.get(i).end); //part1_2 當是再爬A的後一個時
+				if(question==2) System.out.println(datalist.get(i).end);
 			}
 			index++;
 		}
 		//如果查不到東西 return
-		if(query.size()<2) return 1; // 後二層找不到東西
+		if(question==1 && query.size()<2) return 1; // 後二層找不到東西
 		
 		//part1_2
 		if(question==2){
 			/*爬資料*/
 			// 以concept=end 往前一層
-			System.out.println("----------------before levels concept2----------------");
+			System.out.println("----------------before level concept2----------------");
 			// Get some words from database
 			datalist = database.searchTable("%", "%", concept2, threshold_f,false);
 			// put intorelationList and handle _start
@@ -110,7 +111,7 @@ public class Markov {
 			if (datalist.size() == 0) return 2; // 前一層找不到東西
 			
 			// 以concept=start 往後一層
-			System.out.println("----------------after levels concept2----------------");
+			System.out.println("----------------after level concept2----------------");
 			// Get some words from database
 			datalist = database.searchTable(concept2, "%", "%", threshold_b, false);
 			// put into query and relationList
@@ -131,6 +132,7 @@ public class Markov {
 			startWords.add(concept); startWords.add(concept2);
 			
 			/* 找兩concepts關係 */
+			System.out.println("----------------find two concepts relations----------------");
 			//if A_f has B  (B-A)
 			if(ListA_f.contains(concept2)){
 				datalist = database.searchTable(concept2, "%", concept, threshold_f,false);
@@ -255,7 +257,7 @@ System.out.println("7777777777777777777777777777777");
 		
 		/* 生出句子 */
 		// random concepts
-		System.out.println("----------------generatl sentences----------------");
+		System.out.println("----------------generate concepts----------------");
 		List<mySENTENCE> mySentenceList = new ArrayList<>();
 		int time=0;
 		while(mySentenceList.size()<=num_sentence){
@@ -263,12 +265,13 @@ System.out.println("7777777777777777777777777777777");
 			if(mySentence!=null && mySentence.isSentence(this.concept, concept2))
 				mySentenceList.add(mySentence);
 			time++;
-			if(time>300 && time > relationList.size()) {
+			if(time>250 && time > relationList.size()) {
 				System.out.println("too many loop");
 				return 3;
 			}
 		}
         // 根據rel造句
+		System.out.println("----------------build sentences----------------");
         for (int i=0; i<mySentenceList.size(); i++){
         	mySentenceList.get(i).buildSentence(database);
         	mySentenceList.get(i).calScore();
@@ -285,6 +288,7 @@ System.out.println("7777777777777777777777777777777");
             }
         });
        // print
+        System.out.println("----------------show sentences----------------");
        for (int i=0; i<mySentenceList.size(); i++){
        		System.out.println(mySentenceList.get(i).score+"  "+mySentenceList.get(i).concepts.toString());
        		System.out.println(mySentenceList.get(i).score+"  "+mySentenceList.get(i).sentence);
