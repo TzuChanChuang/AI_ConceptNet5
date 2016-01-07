@@ -351,17 +351,6 @@ public class Part2_search {
 			System.out.println(datalist2.get(i).start+" w="+ datalist2.get(i).weight);
 		}
 		datalist.addAll(datalist2);
-		System.out.println("---------------CreatedBy, after level----------------");
-		// Get some words from database
-		datalist2 = database.searchTable(concept1, "CreatedBy", "%", 1.5,false);
-		// put intorelationList and handle _start
-		for (int i = 0; i < datalist2.size(); i++) {
-			myDATA data_temp = datalist2.get(i);
-			data_temp.weight = data_temp.weight+3.5;
-			datalist2.set(i, data_temp);
-			System.out.println(datalist2.get(i).end+" w="+ datalist2.get(i).weight);
-		}
-		datalist.addAll(datalist2);
 		System.out.println("---------------IsA, after level----------------");
 		// Get some words from database
 		datalist2 = database.searchTable(concept1, "IsA", "%", 1.5,false);
