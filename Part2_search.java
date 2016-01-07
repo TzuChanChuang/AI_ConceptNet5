@@ -133,7 +133,11 @@ public class Part2_search {
         ans = "";
 		if (datalist.size() == 0) {
 			ans="Not sure";
-		}else if(datalist.size() <5){
+		}else{
+			String[] token_what = datalist.get(0).end.split("/");
+			ans += token_what[0];
+		}
+		/*else if(datalist.size() <5){
 			for(int i=0; i<datalist.size(); i++){
 				String[] token_what = datalist.get(i).end.split("/");
 				ans += token_what[0] +" w="+ datalist.get(i).weight+"\n";
@@ -143,7 +147,7 @@ public class Part2_search {
 				String[] token_what = datalist.get(i).end.split("/");
 				ans += token_what[0] +" w="+ datalist.get(i).weight+"\n";
 			}
-		}
+		}*/
 		return ans;
 	}
 	public String when() throws Exception{
@@ -329,7 +333,16 @@ public class Part2_search {
 		ans = "";
 		if(datalist.size() == 0){	
 			ans="here";
-		}else if (datalist.size() <5){
+		}else{
+			if(datalist.get(0).rel.equals("UsedFor")){
+				String[] token_where = datalist.get(0).start.split("/");
+				ans += token_where[0]+" w="+ datalist.get(0).weight+"\n";
+			}else{
+				String[] token_where = datalist.get(0).end.split("/");
+				ans += token_where[0]+" w="+ datalist.get(0).weight+"\n";
+			}
+		}
+		/*else if (datalist.size() <5){
 			for(int i=0; i<datalist.size(); i++){
 				if(datalist.get(i).rel.equals("UsedFor")){
 					String[] token_where = datalist.get(i).start.split("/");
@@ -349,7 +362,7 @@ public class Part2_search {
 					ans += token_where[0]+" w="+ datalist.get(i).weight+"\n";
 				}
 			}
-		}
+		}*/
 		return ans;
 	}
 	public String why() throws Exception{
@@ -412,7 +425,16 @@ public class Part2_search {
         ans = "";
 		if (datalist.size() == 0) {
 			ans="Unknown";
-		}else if(datalist.size() <5){
+		}else{
+			String[] token_why;
+			if(datalist.get(0).rel.equals("Causes")){
+				token_why = datalist.get(0).start.split("/");
+			}else{
+				token_why = datalist.get(0).end.split("/");
+			}
+			ans += token_why[0] +" w="+ datalist.get(0).weight+"\n";
+		}
+		/*else if(datalist.size() <5){
 			for(int i=0; i<datalist.size(); i++){
 				String[] token_why;
 				if(datalist.get(i).rel.equals("Causes")){
@@ -432,7 +454,7 @@ public class Part2_search {
 				}
 				ans += token_why[0] +" w="+ datalist.get(i).weight+"\n";
 			}
-		}
+		}*/
 		return ans;
 	}
 	public String who() throws Exception{
@@ -490,7 +512,20 @@ public class Part2_search {
 		String[] token_who;
 		if (datalist.size() == 0) {
 			ans = "someone";
-		} else if (datalist.size() < 5) {
+		} else{
+			if ( datalist.get(0).rel.equals("IsA")) {
+				token_who = datalist.get(0).end.split("/");
+				ans += token_who[0] + " w=" + datalist.get(0).weight + "\n";
+			}else if(datalist.get(0).rel.equals("dbpedia/knownFor")) {
+				token_who = datalist.get(0).start.split("/");
+				int l= token_who.length;
+				ans +=token_who[l-1]+" w=" + datalist.get(0).weight + "\n";
+			}else {
+				token_who = datalist.get(0).start.split("/");
+				ans += token_who[0] + " w=" + datalist.get(0).weight + "\n";
+			}
+		}
+		/*else if (datalist.size() < 5) {
 			for (int i = 0; i < datalist.size(); i++) {
 				if ( datalist.get(i).rel.equals("IsA")) {
 					token_who = datalist.get(i).end.split("/");
@@ -518,7 +553,7 @@ public class Part2_search {
 					ans += token_who[0] + " w=" + datalist.get(i).weight + "\n";
 				}
 			}
-		}
+		}*/
 		return ans;
 	}
 	
