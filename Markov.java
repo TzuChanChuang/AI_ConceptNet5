@@ -290,7 +290,7 @@ System.out.println("7777777777777777777777777777777777");
 		// handle _start
 		markovChain.put("_start", startWords);
 		// Add the words to the hash table
-		if(!relationList.isEmpty())addRelation(relationList);
+		if(relationList.size()>5)addRelation(relationList);
 		else return 3;
 
 		
