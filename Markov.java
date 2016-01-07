@@ -40,10 +40,10 @@ public class Markov {
 		// Create the first two entries (k:_start, k:_end)
 		markovChain.put("_start", new Vector<String>());
 		markovChain.put("_end", new Vector<String>());
-		//把concept放入 _start 中
+		//рconcept _start い
 		Vector<String> startWords = markovChain.get("_start");
 		startWords.add(this.concept);
-		// 增加原本input concept的start比重
+		// 糤セinput conceptstartゑ
 		startWords.add(this.concept);startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept);  
 		
 		//open database
@@ -53,23 +53,23 @@ public class Markov {
 		database.createStmt();
 			
 		/*handle hash map*/
-		// 做出concept的關係hash map
+		// 暗concept闽玒hash map
 		
-		// 以concept=end 往前一層
+		// concept=end ┕玡糷
 		System.out.println("----------------before levels----------------");
 		// Get some words from database
 		List<myDATA> datalist = database.searchTable("%", "%", concept, threshold_f,false);
 		// put intorelationList and handle _start
 		for (int i = 0; i < datalist.size(); i++) {
 			System.out.println(datalist.get(i).start);
-			startWords.add(datalist.get(i).start); startWords.add(this.concept); // 增加原本input concept的start比重
+			startWords.add(datalist.get(i).start); startWords.add(this.concept); // 糤セinput conceptstartゑ
 			ListA_f.add(datalist.get(i).start); //part1_2
 			if(!datalist.get(i).start.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 		}
-		// 如果查不到東西
-		if (datalist.size() == 0) return 2; // 前一層找不到東西
+		// 狦琩ぃ狥﹁
+		if (datalist.size() == 0) return 2; // 玡糷тぃ狥﹁
 		
-		// 以concept=start 往後兩層
+		// concept=start ┕ㄢ糷
 		System.out.println("----------------after levels----------------");
 		query.add(this.concept);
 		int index = 0;
@@ -85,32 +85,32 @@ public class Markov {
 					relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
 				if(question==1 && index==0 && !query.contains(datalist.get(i).end))
 					query.add(datalist.get(i).end);
-				if(index==0) ListA_b.add(datalist.get(i).end); //part1_2 當是再爬A的後一個時
+				if(index==0) ListA_b.add(datalist.get(i).end); //part1_2 讽琌A
 				if(question==2) System.out.println(datalist.get(i).end);
 			}
 			index++;
 		}
-		//如果查不到東西 return
-		if(question==1 && query.size()<2) return 1; // 後二層找不到東西
+		//狦琩ぃ狥﹁ return
+		if(question==1 && query.size()<2) return 1; // 糷тぃ狥﹁
 		
 		//part1_2
 		if(question==2){
-			/*爬資料*/
-			// 以concept=end 往前一層
+			/*戈*/
+			// concept=end ┕玡糷
 			System.out.println("----------------before level concept2----------------");
 			// Get some words from database
 			datalist = database.searchTable("%", "%", concept2, threshold_f,false);
 			// put intorelationList and handle _start
 			for (int i = 0; i < datalist.size(); i++) {
 				System.out.println(datalist.get(i).start);
-				//startWords.add(datalist.get(i).start); startWords.add(this.concept2); // 增加原本input concept2的比重
+				//startWords.add(datalist.get(i).start); startWords.add(this.concept2); // 糤セinput concept2ゑ
 				ListB_f.add(datalist.get(i).start); //part1_2
 				//if(!datalist.get(i).start.equals(this.concept2))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 			}
-			// 如果查不到東西
-			if (datalist.size() == 0) return 2; // 前一層找不到東西
+			// 狦琩ぃ狥﹁
+			if (datalist.size() == 0) return 2; // 玡糷тぃ狥﹁
 			
-			// 以concept=start 往後一層
+			// concept=start ┕糷
 			System.out.println("----------------after level concept2----------------");
 			// Get some words from database
 			datalist = database.searchTable(concept2, "%", "%", threshold_b, false);
@@ -121,8 +121,8 @@ public class Markov {
 				//	relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
 				ListB_b.add(datalist.get(i).end); //part1_2
 			}
-			//如果查不到東西 return
-			if(datalist.size()<2) return 1; // 後二層找不到東西
+			//狦琩ぃ狥﹁ return
+			if(datalist.size()<2) return 1; // 糷тぃ狥﹁
 			
 			//reset relationList startWords
 			relationList = new ArrayList<>();
@@ -131,7 +131,7 @@ public class Markov {
 			// startWords add two concepts
 			startWords.add(concept); startWords.add(concept2);
 			
-			/* 找兩concepts關係 */
+			/* тㄢconcepts闽玒 */
 			System.out.println("----------------find two concepts relations----------------");
 			//if A_f has B  (B-A)
 			if(ListA_f.contains(concept2)){
@@ -141,7 +141,7 @@ public class Markov {
 						if(!concept2.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 					}
 				}
-				//加入A_b的東西
+				//A_b狥﹁
 				datalist = database.searchTable(concept, "%", "%", threshold_f,false);
 				for (int i = 0; i < datalist.size(); i++) {
 					for(int repeat=0; repeat<10; repeat++){
@@ -178,7 +178,7 @@ System.out.println("33333333333333333333333333333333  " );
 						if(!concept2.equals(this.concept))relationList.add(datalist.get(i).start + " " + datalist.get(i).rel+ " " + datalist.get(i).end + " " + datalist.get(i).weight);
 					}
 				}
-				//加入B_b的東西
+				//B_b狥﹁
 				datalist = database.searchTable(concept2, "%", "%", threshold_f,false);
 				for (int i = 0; i < datalist.size(); i++) {
 					for(int repeat=0; repeat<10; repeat++){
@@ -207,7 +207,7 @@ System.out.println("4444444444444444444444444444444444");
 System.out.println("555555555555555555555555555555555");
 				}
 			}
-			//A_f B_f ,加入_start
+			//A_f B_f ,_start
 			for(int x=0; x<ListA_f.size(); x++){
 				if(ListB_f.contains(ListA_f.get(x))){
 					datalist = database.searchTable(ListA_f.get(x), "%", concept2, threshold_f,false);
@@ -226,7 +226,7 @@ System.out.println("555555555555555555555555555555555");
 System.out.println("666666666666666666666666666666666");
 				}
 			}
-			//A_b B_b ,加入_start
+			//A_b B_b ,_start
 			for(int x=0; x<ListA_b.size(); x++){
 				if(ListB_b.contains(ListA_b.get(x))){
 					datalist = database.searchTable( concept2,"%", ListA_b.get(x), threshold_f,false);
@@ -247,7 +247,7 @@ System.out.println("7777777777777777777777777777777");
 			}
 		}
 		
-		// 放到hashmap(markovChain)中
+		// hashmap(markovChain)い
 		// handle _start
 		markovChain.put("_start", startWords);
 		// Add the words to the hash table
@@ -255,7 +255,7 @@ System.out.println("7777777777777777777777777777777");
 		else return 3;
 
 		
-		/* 生出句子 */
+		/* ネ */
 		// random concepts
 		System.out.println("----------------generate concepts----------------");
 		List<mySENTENCE> mySentenceList = new ArrayList<>();
@@ -270,7 +270,7 @@ System.out.println("7777777777777777777777777777777");
 				return 3;
 			}
 		}
-        // 根據rel造句
+        // 沮rel硑
 		System.out.println("----------------build sentences----------------");
         for (int i=0; i<mySentenceList.size(); i++){
         	mySentenceList.get(i).buildSentence(database);
@@ -306,7 +306,7 @@ System.out.println("7777777777777777777777777777777");
 	}
 	
 	
-	// 把relation list放入key-concpet的hash map list底下
+	// рrelation listkey-concpethash map list┏
 	public void addRelation(List<String> relation_list){
 		int i=0;
 		
@@ -350,7 +350,7 @@ System.out.println("7777777777777777777777777777777");
 		nextWord = startWords.get(rnd.nextInt(startWordsLen));
 		newPhrase.add(nextWord);
 		Vector<String> wordSelection = markovChain.get(nextWord);
-		if(wordSelection==null) { //因為有些_start沒有next
+		if(wordSelection==null) { //Τㄇ_start⊿Τnext
 			return null; 
 		}
 		int wordSelectionLen = wordSelection.size();
@@ -366,7 +366,7 @@ System.out.println("7777777777777777777777777777777");
 			newPhrase.add(words[1]); newPhrase.add(words[2]);
 			wordSelection = markovChain.get(nextWord);
 			
-			//紀錄個數及weight sum
+			//魁计のweight sum
 			weightSum += Double.parseDouble(words[3]);
 			count++;
 			
@@ -380,7 +380,7 @@ System.out.println("7777777777777777777777777777777");
 			wordSelectionLen = wordSelection.size();	
 		}
 		
-		// print 結果
+		// print 挡狦
 		//System.out.println(newPhrase.toString() +"\n" + "AvgWeight: "+weightSum/count + " length: " + newPhrase.size());
 		
 		//return 
