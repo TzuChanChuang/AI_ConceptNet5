@@ -268,14 +268,13 @@ System.out.println("666666666666666666666666666666666");
 									for(int repeat=0; repeat<10; repeat++){
 										relationList.add(concept + "_and_" + concept2 + " " + datalist.get(y).rel + " "+ datalist.get(y).end + " " + datalist.get(y).weight);
 									}
-								}
-System.out.println("7777777777777777777777777777777777");
-							}
-							if(hasRelationType(datalist2.get(z).rel)){//放入B的rel
-								if(!datalist.get(y).end.equals(concept) && !datalist2.get(z).end.equals(concept2)){
-									startWords.add(concept + "_and_" + concept2 );
-									for(int repeat=0; repeat<10; repeat++){
-										relationList.add(concept + "_and_" + concept2 + " " + datalist2.get(z).rel + " "+ datalist2.get(z).end + " " + datalist2.get(z).weight);
+									//往後爬一層
+									List<myDATA> datalist3 = database.searchTable( datalist.get(y).end,"%", "%", threshold_f,false);
+									for(int w =0; w<datalist3.size(); w++){
+										if(hasRelationType(datalist3.get(w).rel)){
+											if(!datalist3.get(w).end.equals(datalist.get(y)))
+												relationList.add(datalist3.get(w).start + " " + datalist3.get(w).rel + " "+ datalist3.get(w).end + " " + datalist3.get(w).weight);
+										}
 									}
 								}
 System.out.println("7777777777777777777777777777777777");
