@@ -667,15 +667,24 @@ public class Part2_search {
 
 	public String how() throws Exception{
 		
-		List<myDATA> datalist = database.searchTable("%", "UsedFor", concept1, 1.5, false);
+		List<myDATA> datalist = database.searchTable("%", "UsedFor", concept1, 0.0, false);
+		for(int i=0; i<datalist.size(); i++){
+			myDATA data_temp = datalist.get(i);
+			data_temp.weight -= 1.5;
+			datalist.set(i, data_temp);
+		}
 		List<myDATA> datalist2 = database.searchTable(concept1, "HasFirstSubevent", "%", 0.0, false);
 		for(int i=0; i<datalist2.size(); i++){
 			myDATA data_temp = datalist2.get(i);
-			data_temp.weight += 2;
+			data_temp.weight += 4;
 			datalist2.set(i, data_temp);
 		}
 		datalist.addAll(datalist2);
-	
+		datalist2 = database.searchTable(concept1, "HasSubevent", "%", 1.0, false);
+		datalist.addAll(datalist2);
+		datalist2 = database.searchTable("%", "HasSubevent", concept1, 1.0, false);
+		datalist.addAll(datalist2);
+		
 		
 		//sort
 	    Collections.sort(datalist,

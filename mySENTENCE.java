@@ -46,8 +46,11 @@ public class mySENTENCE {
 						else sentence = sentence + "which are kind of " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "IsA":
@@ -60,8 +63,11 @@ public class mySENTENCE {
 						else sentence = sentence + "which are " + grammar.nounConversion(concepts.get(i+2)) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "DerivedFrom":
@@ -74,8 +80,11 @@ public class mySENTENCE {
 						else sentence = sentence + "which are derived from " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "Synonym":
@@ -88,8 +97,11 @@ public class mySENTENCE {
 						else sentence = sentence + "which are synonymous with " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "dbpedia/genre":
@@ -100,8 +112,11 @@ public class mySENTENCE {
 						sentence = sentence + "which may have a type of " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "EtymologicallyDerivedFrom":
@@ -114,8 +129,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are etymologivally derived from "+ concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "UsedFor":
@@ -128,8 +146,11 @@ public class mySENTENCE {
 						sentence = sentence + "which you can used "+ VorN+" " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "AtLocation":
@@ -141,8 +162,11 @@ public class mySENTENCE {
 						sentence = sentence + "from " + concepts.get(i+2) + " ";
 						from ++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "HasSubevent":
@@ -162,8 +186,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may need to " + concepts.get(i+2) + " first ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "CapableOf":
@@ -174,8 +201,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which can " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "Antonym":
@@ -188,8 +218,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are contrast to " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "Causes":
@@ -200,8 +233,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may cause " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "MotivatedByGoal":
@@ -215,8 +251,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are because of the desire of " + grammar.addING(concepts.get(i+2)) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "HasProperty":
@@ -227,8 +266,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may be " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "SimilarTo":
@@ -241,8 +283,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are similar to " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "PartOf":
@@ -255,8 +300,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are part of the " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "HasContext":
@@ -269,8 +317,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are related to " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "ReceivesAction":
@@ -293,8 +344,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which have "+grammar.nounConversion(concepts.get(i+2)) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "HasFirstSubevent":
@@ -305,8 +359,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may may first " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "DefinedAs":
@@ -319,8 +376,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are defined as " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "HasLastSubevent":
@@ -331,8 +391,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may then " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "MemberOf":
@@ -345,8 +408,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are member of " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "CausesDesire":
@@ -357,8 +423,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may lead to " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "MadeOf":
@@ -371,8 +440,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are made of " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "Desires":
@@ -383,8 +455,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may desire to " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "NotCapableOf":
@@ -395,8 +470,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may not be able to " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "NotDesires":
@@ -407,8 +485,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may not desire for " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "NotHasProperty":
@@ -419,8 +500,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may not have the property of " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "CreatedBy":
@@ -433,8 +517,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which are created by " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "dbpedia/influenceBy":
@@ -445,8 +532,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may be influenced by " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "NotIsA":
@@ -459,8 +549,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are not " + grammar.nounConversion(concepts.get(i+2)) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "NotHasA":
@@ -473,8 +566,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which may not have " + grammar.nounConversion(concepts.get(i+2)) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "DesireOf":
@@ -487,8 +583,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may desire " +VorN+ concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "SymbolOf":
@@ -499,8 +598,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may be the symbol of " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "LocatedNear":
@@ -511,8 +613,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may be near to " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "LocationOfAction":
@@ -523,8 +628,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may be done at " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "NotMadeOf":
@@ -537,8 +645,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are not consisted of " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "dbpedia/mainInterest":
@@ -551,8 +662,11 @@ public class mySENTENCE {
 						else sentence  = sentence + "which are interested in " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				case "SimilarSize":
@@ -563,8 +677,11 @@ public class mySENTENCE {
 						sentence  = sentence + "which may have similar size as " + concepts.get(i+2) + " ";
 						which++;
 					}
-					else 
+					else {
+						for(i=i+1;i<concepts.size()-1;i=i+1)
+							concepts.remove(i);
 						return;
+					}
 					main++;
 					break;
 				default:
@@ -598,11 +715,11 @@ public class mySENTENCE {
 			score = score + 1;
 		// ¥[¦¨length¼Æ
 		if(length>12)
-			score = score+2.2;
+			score = score+3;
 		else if(length>7 )
-			score = score + 1.2;
+			score = score + 1.5;
 		else if(length>5 )
-			score = score + 0.8;
+			score = score + 1;
 		
 		score = new BigDecimal(score).setScale(4, BigDecimal.ROUND_HALF_UP).doubleValue();
 		if(length<3 || length>15) score = 0;
