@@ -36,7 +36,7 @@ public class DATABASE {
 				database.connDB("ConceptNet_en");
 				database.createStmt();
 				
-				List<myDATA> datalist = database.searchTable("snake%", "NotIsA", "%", 0, false);
+				List<myDATA> datalist = database.searchTable("%", "CapableOf", "swim", 0, false);
 				//List<myDATA> datalist2 = database.searchTable("go/v%", "%", "%", 1, false);
 				
 				System.out.println("datalist1");
@@ -142,7 +142,6 @@ public class DATABASE {
 			String end = rs.getString("end");
 			double weight = rs.getDouble("weight");
 			String surface_text = rs.getString("surface_text");
-			surface_text = surface_text.replace('$', '\"');
 			
 			myDATA data = new myDATA();
 			data.id = id;
@@ -220,8 +219,7 @@ public class DATABASE {
 			rel = edge.get("rel").toString();
 			end = edge.get("end").toString();
 			weight = Double.parseDouble( edge.get("weight").toString() );
-			surface_text = edge.get("surfaceText").toString();
-			surface_text = surface_text.replace('\"','$');
+			surface_text = "";
 			
 			// insert
 			if(start.contains("/c/en/") && end.contains("/c/en/")){
