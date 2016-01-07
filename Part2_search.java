@@ -403,9 +403,108 @@ public class Part2_search {
 		
 		return ans;
 	}
-	public String can() throws Exception{
+public String can() throws Exception{
 		
-		return ans;
+		List<String> listA_b = new ArrayList<>();
+		List<String> listB_f = new ArrayList<>();
+		
+		System.out.println("----------------can, CapableOf search----------------");
+		//A_b
+		List<myDATA> datalistA = database.searchTable(concept1, "CapableOf", "%", 0.9,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);	
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		List<myDATA> datalistB = database.searchTable("%", "CapableOf", concept2, 0.9,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		
+		System.out.println("----------------can, Desires search----------------");
+		//A_b
+		datalistA = database.searchTable(concept1, "Desires", "%", 0.9,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);	
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		datalistB = database.searchTable("%", "Desires", concept2, 0.9,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		
+		System.out.println("----------------can, UsedFor search----------------");
+		//A_b
+		datalistA = database.searchTable(concept1, "UsedFor", "%", 0.9,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);	
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		datalistB = database.searchTable("%", "UsedFor", concept2, 0.9,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		
+		System.out.println("----------------can, ReceivesAction search----------------");
+		//A_b
+		datalistA = database.searchTable(concept1, "ReceivesAction", "%", 0.9,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);	
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		datalistB = database.searchTable("%", "ReceivesAction", concept2, 0.9,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		
+		System.out.println("----------------can, DefinedAs search----------------");
+		//A_DefinedAs
+		List<String> listA_definedas = new ArrayList<>();
+		datalistA = database.searchTable(concept1, "DefinedAs", "%", 1.5,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");		
+			listA_definedas.add(token[0]);
+		}
+		datalistA = database.searchTable("%", "DefinedAs", concept1, 1.5,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).start.split("/");		
+			listA_definedas.add(token[0]);
+		}
+		// loop for IsA 
+		for (int i = 0; i < listA_definedas.size(); i++) {
+			if (listB_f.contains(listA_definedas.get(i)))
+				return "Yes";
+		}
+		System.out.println("----------------can, IsA search----------------");
+		//A_isA
+		listA_definedas = new ArrayList<>();
+		datalistA = database.searchTable(concept1, "IsA", "%", 1.5,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");		
+			listA_definedas.add(token[0]);
+		}
+		// loop for  DefinedAs
+		for(int i=0; i<listA_definedas.size(); i++){
+			if(listB_f.contains(listA_definedas.get(i)))
+				return "Yes";
+		}
+		
+		return "No";
 	}
 	public String has() throws Exception{
 		
