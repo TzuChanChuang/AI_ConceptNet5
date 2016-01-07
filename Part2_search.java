@@ -362,6 +362,17 @@ public class Part2_search {
 			System.out.println(datalist2.get(i).end+" w="+ datalist2.get(i).weight);
 		}
 		datalist.addAll(datalist2);
+		System.out.println("---------------IsA, after level----------------");
+		// Get some words from database
+		datalist2 = database.searchTable(concept1, "IsA", "%", 1.5,false);
+		// put intorelationList and handle _start
+		for (int i = 0; i < datalist.size(); i++) {
+			myDATA data_temp = datalist.get(i);
+			data_temp.weight = data_temp.weight+1;
+			datalist.set(i, data_temp);
+			System.out.println(datalist.get(i).end);
+		}
+		datalist.addAll(datalist2);
 		
 		// 如果查不到東西
 		ans = "";
@@ -370,7 +381,7 @@ public class Part2_search {
 			ans = "someone";
 		} else if (datalist.size() < 5) {
 			for (int i = 0; i < datalist.size(); i++) {
-				if (datalist.get(i).rel.equals("CreatedBy")) {
+				if (datalist.get(i).rel.equals("CreatedBy")||datalist.get(i).rel.equals("IsA")) {
 					token_who = datalist.get(i).end.split("/");
 					ans += token_who[0] + " w=" + datalist.get(i).weight + "\n";
 				}else if(datalist.get(i).rel.equals("dbpedia/knownFor")) {
@@ -384,7 +395,7 @@ public class Part2_search {
 			}
 		} else {
 			for (int i = 0; i < 5; i++) {
-				if (datalist.get(i).rel.equals("CreatedBy")) {
+				if (datalist.get(i).rel.equals("CreatedBy")||datalist.get(i).rel.equals("IsA")) {
 					token_who = datalist.get(i).end.split("/");
 					ans += token_who[0] + " w=" + datalist.get(i).weight + "\n";
 				} else if(datalist.get(i).rel.equals("knownFor")) {

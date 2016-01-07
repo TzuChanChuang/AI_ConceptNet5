@@ -22,7 +22,7 @@ import org.json.*;
 public class DATABASE {
 	
 	private Connection conn = null;
-	private Statement stmt = null;
+	private Statement stmt = null; 
 	
 	public static DATABASE database = new DATABASE();
 	public static void main(String[] args ){
@@ -36,7 +36,7 @@ public class DATABASE {
 				database.connDB("ConceptNet_en");
 				database.createStmt();
 				
-				List<myDATA> datalist = database.searchTable("%", "CapableOf", "swim", 0, false);
+				List<myDATA> datalist = database.searchTable("aristotle", "%", "%", 0, false);
 				//List<myDATA> datalist2 = database.searchTable("go/v%", "%", "%", 1, false);
 				
 				System.out.println("datalist1");
