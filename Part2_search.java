@@ -179,7 +179,7 @@ public class Part2_search {
 			ans="here";
 		}else if (datalist.size() <5){
 			for(int i=0; i<datalist.size(); i++){
-				if(datalist.get(i).end.equals(concept1)){
+				if(datalist.get(i).end.equals(concept1+"%")){
 					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
 				}else{
 					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
@@ -187,7 +187,7 @@ public class Part2_search {
 			}
 		}else{
 			for(int i=0; i<5 ; i++){
-				if(datalist.get(i).end.equals(concept1)){
+				if(datalist.get(i).end.equals(concept1+"%")){
 					ans += datalist.get(i).start+" w="+ datalist.get(i).weight+"\n";
 				}else{
 					ans += datalist.get(i).end+" w="+ datalist.get(i).weight+"\n";
