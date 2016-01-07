@@ -56,7 +56,7 @@ public class Part1 {
 				t_f-=0.5; t_b-=0.5;
 			}
 			//³Ì«á©³½u
-			if(t_f==0.0 && t_b==0.0){
+			if(t_f==0.5 && t_b==0.5){
 				myMarkov.num_sentence =5;
 				System.out.println("----------------Markov "+t_b+" "+t_f+"----------------");
 				if(token[1]=="") state_return = myMarkov.question(1, t_b,t_f);

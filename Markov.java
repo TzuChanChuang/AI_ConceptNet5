@@ -42,9 +42,6 @@ public class Markov {
 		markovChain.put("_end", new Vector<String>());
 		//把concept放入 _start 中
 		Vector<String> startWords = markovChain.get("_start");
-		startWords.add(this.concept);
-		// 增加原本input concept的start比重
-		startWords.add(this.concept);startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept); startWords.add(this.concept);  
 		
 		//open database
 		System.out.println("----------------open SQLite----------------");
@@ -84,6 +81,8 @@ public class Markov {
 			// put into query and relationList
 			for(int i=0; i<datalist.size(); i++){
 				if(hasRelationType(datalist.get(i).rel)){
+					//增加concept在_start的比重
+					startWords.add(this.concept);startWords.add(this.concept);startWords.add(this.concept);
 					if(!startWords.contains(datalist.get(i).end)&&!query.contains(datalist.get(i).end))
 						relationList.add(datalist.get(i).start+" "+datalist.get(i).rel + " " + datalist.get(i).end+" "+datalist.get(i).weight);
 					if(question==1 && index==0 && !query.contains(datalist.get(i).end))
@@ -291,7 +290,7 @@ System.out.println("7777777777777777777777777777777777");
 		// handle _start
 		markovChain.put("_start", startWords);
 		// Add the words to the hash table
-		if(!relationList.isEmpty())addRelation(relationList);
+		if(relationList.size()>5)addRelation(relationList);
 		else return 3;
 
 		
@@ -313,6 +312,7 @@ System.out.println("7777777777777777777777777777777777");
         // 根據rel造句
 		System.out.println("----------------build sentences----------------");
         for (int i=0; i<mySentenceList.size(); i++){
+        	System.out.println("sentence" + (i+1));
         	mySentenceList.get(i).buildSentence(database);
         	mySentenceList.get(i).calScore();
         }

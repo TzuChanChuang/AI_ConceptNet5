@@ -16,7 +16,6 @@ public class mySENTENCE {
 		String VorN;
 		int Ns = 0; 
 		int main = 0, which =0, from = 0;
-		String subjectTerm = "";
 		
 
 		for (int i=0; i<concepts.size()-1; i=i+2){
@@ -41,7 +40,6 @@ public class mySENTENCE {
 					if(main == 0) {
 						if(Ns==0)sentence = sentence +concepts.get(i) + " " +grammar.verbConversionNowType("be", concepts.get(i))+" kind of " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are kind of " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence = sentence + "which " +grammar.verbConversionNowType("be", concepts.get(i))+ " kind of " + concepts.get(i+2) + " ";
@@ -56,7 +54,6 @@ public class mySENTENCE {
 					if(main == 0){
 						if(Ns==0)sentence = sentence +concepts.get(i) + " " +grammar.verbConversionNowType("be", concepts.get(i))+ " " + grammar.AorAn(concepts.get(i+2)) + " " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are " + grammar.nounConversion(concepts.get(i+2)) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence = sentence + "which " +grammar.verbConversionNowType("be", concepts.get(i))+ " " + grammar.AorAn(concepts.get(i+2)) +" " + concepts.get(i+2) + " ";
@@ -71,7 +68,6 @@ public class mySENTENCE {
 					if(main==0){
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" derived from " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are derived from " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" derived from " + concepts.get(i+2) + " ";
@@ -86,7 +82,6 @@ public class mySENTENCE {
 					if(main==0){
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" synonymous with " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are synonymous with " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" synonymous with " + concepts.get(i+2) + " ";
@@ -100,7 +95,6 @@ public class mySENTENCE {
 				case "dbpedia/genre":
 					if(main==0){
 						sentence = sentence +concepts.get(i) + " may have a type of " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence = sentence + "which may have a type of " + concepts.get(i+2) + " ";
@@ -114,7 +108,6 @@ public class mySENTENCE {
 					if(main==0){
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" etymologically derived from " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are etymologically derived from " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0) sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" etymologivally derived from "+ concepts.get(i+2) + " ";
@@ -130,7 +123,6 @@ public class mySENTENCE {
 					else VorN="for";
 					if(main==0){
 						sentence =sentence + "You can use " + concepts.get(i) +" " + VorN + " " + concepts.get(i+2) +" ";
-						subjectTerm = "you";
 					}
 					else if(which==0){
 						sentence = sentence + "which you can use "+ VorN+" " + concepts.get(i+2) + " ";
@@ -144,7 +136,6 @@ public class mySENTENCE {
 					if(main==0){
 						if(Ns==0) sentence = sentence +"There "+grammar.verbConversionNowType("be", concepts.get(i))+" "+ concepts.get(i) + " at " + concepts.get(i+2) +" ";
 						else sentence = sentence +"There are "+ concepts.get(i) + " at " + concepts.get(i+2) +" ";
-						subjectTerm = "there";
 					}
 					else if(from==0){
 						sentence = sentence + "from " + concepts.get(i+2) + " ";
@@ -159,7 +150,6 @@ public class mySENTENCE {
 						concepts.set(i+2, concepts.get(i+2).substring(4, concepts.get(i+2).length()));
 					if(main==0){
 						sentence = sentence +"When you "+concepts.get(i) + ", you may " + concepts.get(i+2) +" ";
-						subjectTerm = "you";
 					}
 					else sentence = sentence + "and then "+ "you" +" may " + concepts.get(i+2) + " ";
 					main++;
@@ -167,10 +157,9 @@ public class mySENTENCE {
 				case "HasPrerequisite":
 					if(main==0) {
 						sentence = sentence +"If you want to "+concepts.get(i) + ", you have to " + concepts.get(i+2) +" ";
-						subjectTerm = "you";
 					}
 					else if(which==0){
-						sentence  = sentence + "which "+subjectTerm+" need to " + concepts.get(i+2) + " first ";
+						sentence  = sentence + "which may need to " + concepts.get(i+2) + " first ";
 						which++;
 					}
 					else 
@@ -180,7 +169,6 @@ public class mySENTENCE {
 				case "CapableOf":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " can " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which can " + concepts.get(i+2) + " ";
@@ -194,7 +182,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" contrast to " + concepts.get(i+2) +" ";
 						else sentence =sentence + concepts.get(i) + " are contrast to " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" contrast to " + concepts.get(i+2) + " ";
@@ -208,7 +195,6 @@ public class mySENTENCE {
 				case "Causes":
 					if(main==0) {
 						sentence =sentence + grammar.addING(concepts.get(i)) + " may cause " + concepts.get(i+2) +" ";
-						subjectTerm = grammar.addING(concepts.get(i));
 					}
 					else if(which==0){
 						sentence  = sentence + "which may cause " + concepts.get(i+2) + " ";
@@ -223,7 +209,6 @@ public class mySENTENCE {
 					else VorN="";
 					if(main==0) {
 						sentence = sentence +"You would " + concepts.get(i) + "  becasue you want "+VorN + concepts.get(i+2) +" ";
-						subjectTerm = "you";
 					}
 					else if(which==0){
 						if(Ns==0) sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" because of the desire of " + grammar.addING(concepts.get(i+2)) + " ";
@@ -237,7 +222,6 @@ public class mySENTENCE {
 				case "HasProperty":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " may be " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may be " + concepts.get(i+2) + " ";
@@ -251,7 +235,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" similar to " + concepts.get(i+2) + " ";
 						else sentence = sentence +concepts.get(i) + " are similar to " + concepts.get(i+2) + " ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" similar to " + concepts.get(i+2) + " ";
@@ -266,7 +249,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" part of the " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are part of the " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" part of the " + concepts.get(i+2) + " ";
@@ -281,7 +263,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" related to " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are related to " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0) sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" related to " + concepts.get(i+2) + " ";
@@ -295,7 +276,6 @@ public class mySENTENCE {
 				case "ReceivesAction":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " " + grammar.verbConversionPassiveType(concepts.get(i+2), concepts.get(i)) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence = sentence + "which " + grammar.verbConversionPassiveType(concepts.get(i+2), concepts.get(i)) +" ";
@@ -307,7 +287,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence =  sentence +concepts.get(i) + " "+grammar.verbConversionNowType("have", concepts.get(i))+" "+grammar.AorAn(concepts.get(i+2))+" " + concepts.get(i+2) +" ";
 						else sentence =  sentence +concepts.get(i) + " have " + grammar.nounConversion(concepts.get(i+2)) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("have", concepts.get(i))+" "+grammar.AorAn(concepts.get(i+2))+" " + concepts.get(i+2) + " ";
@@ -321,10 +300,9 @@ public class mySENTENCE {
 				case "HasFirstSubevent":
 					if(main==0) {
 						sentence = sentence +"When you " + concepts.get(i) + " you may first " + concepts.get(i+2) +" ";
-						subjectTerm = "you";
 					}
 					else if(which==0){
-						sentence  = sentence + "which "+subjectTerm+" may first " + concepts.get(i+2) + " ";
+						sentence  = sentence + "which may may first " + concepts.get(i+2) + " ";
 						which++;
 					}
 					else 
@@ -335,7 +313,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" defined as " + concepts.get(i+2) +" ";
 						else sentence = concepts.get(i) + " are defined as " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" defined as " + concepts.get(i+2) + " ";
@@ -349,10 +326,9 @@ public class mySENTENCE {
 				case "HasLastSubevent":
 					if(main==0) {
 						sentence = sentence +"After " + grammar.addING(concepts.get(i)) + " you may " + concepts.get(i+2) +" ";
-						subjectTerm = "you";
 					}
 					else if(which==0){
-						sentence  = sentence + "which "+subjectTerm+" will then " + concepts.get(i+2) + " ";
+						sentence  = sentence + "which may then " + concepts.get(i+2) + " ";
 						which++;
 					}
 					else 
@@ -363,7 +339,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence =sentence + concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" member of " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are member of " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" member of " + concepts.get(i+2) + " ";
@@ -377,7 +352,6 @@ public class mySENTENCE {
 				case "CausesDesire":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " may lead to " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may lead to " + concepts.get(i+2) + " ";
@@ -391,7 +365,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" made of " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are made of " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" made of " + concepts.get(i+2) + " ";
@@ -405,7 +378,6 @@ public class mySENTENCE {
 				case "Desires":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " may desire to " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may desire to " + concepts.get(i+2) + " ";
@@ -418,7 +390,6 @@ public class mySENTENCE {
 				case "NotCapableOf":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " may not be able to " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may not be able to " + concepts.get(i+2) + " ";
@@ -431,7 +402,6 @@ public class mySENTENCE {
 				case "NotDesires":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " may not desire for " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may not desire for " + concepts.get(i+2) + " ";
@@ -444,7 +414,6 @@ public class mySENTENCE {
 				case "NotHasProperty":
 					if(main==0) {
 						sentence =  sentence +concepts.get(i) + " may not have the property of " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may not have the property of " + concepts.get(i+2) + " ";
@@ -458,7 +427,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" created by " + concepts.get(i+2) +" ";
 						else sentence =sentence + concepts.get(i) + " are created by " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" created by " + concepts.get(i+2) + " ";
@@ -472,7 +440,6 @@ public class mySENTENCE {
 				case "dbpedia/influenceBy":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " may be influenced by " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may be influenced by " + concepts.get(i+2) + " ";
@@ -486,7 +453,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" not "+grammar.AorAn(concepts.get(i+2))+" " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are not " + grammar.nounConversion(concepts.get(i+2)) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0) sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" not "+grammar.AorAn(concepts.get(i+2))+" " + concepts.get(i+2) + " ";
@@ -501,7 +467,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence = sentence +concepts.get(i) + " may not have "+grammar.AorAn(concepts.get(i+2))+" " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " may not have " + grammar.nounConversion(concepts.get(i+2)) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which may not have "+grammar.AorAn(concepts.get(i+2))+" " + concepts.get(i+2) + " ";
@@ -517,7 +482,6 @@ public class mySENTENCE {
 					else VorN = "";
 					if(main==0) {
 						sentence = sentence + concepts.get(i) + " may desire " + VorN + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may desire " +VorN+ concepts.get(i+2) + " ";
@@ -530,7 +494,6 @@ public class mySENTENCE {
 				case "SymbolOf":
 					if(main==0) {
 						sentence = sentence +concepts.get(i) + " may be the symbol of " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may be the symbol of " + concepts.get(i+2) + " ";
@@ -543,7 +506,6 @@ public class mySENTENCE {
 				case "LocatedNear":
 					if(main==0) {
 						sentence = sentence + concepts.get(i) + " may be near to " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						sentence  = sentence + "which may be near to " + concepts.get(i+2) + " ";
@@ -556,7 +518,6 @@ public class mySENTENCE {
 				case "LocationOfAction":
 					if(main==0) {
 						sentence = sentence +"We" + concepts.get(i) + " at " + concepts.get(i+2) +" ";
-						subjectTerm = "we";
 					}
 					else if(which==0){
 						sentence  = sentence + "which may be done at " + concepts.get(i+2) + " ";
@@ -570,7 +531,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0) sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" not consisted of " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are not consisted of " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" not consisted of " + concepts.get(i+2) + " ";
@@ -585,7 +545,6 @@ public class mySENTENCE {
 					if(main==0) {
 						if(Ns==0)sentence = sentence +concepts.get(i) + " "+grammar.verbConversionNowType("be", concepts.get(i))+" interested in " + concepts.get(i+2) +" ";
 						else sentence = sentence +concepts.get(i) + " are interested in " + concepts.get(i+2) +" ";
-						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
 						if(Ns==0)sentence  = sentence + "which "+grammar.verbConversionNowType("be", concepts.get(i))+" interested in " + concepts.get(i+2) + " ";
@@ -598,7 +557,6 @@ public class mySENTENCE {
 					break;
 				case "SimilarSize":
 					if(main==0) {
-						subjectTerm = concepts.get(i);
 						sentence =sentence + concepts.get(i) + " may have similar size as " + concepts.get(i+2) +" ";
 					}
 					else if(which==0){
