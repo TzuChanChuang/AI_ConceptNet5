@@ -20,7 +20,7 @@ public class mySENTENCE {
 		
 
 		for (int i=0; i<concepts.size()-1; i=i+2){
-			//р"//"奔
+			//把"//"拿掉
 			String[] token = concepts.get(i).split("/");
 			concepts.set(i, token[0]);
 			token = concepts.get(i+2).split("/");
@@ -29,7 +29,7 @@ public class mySENTENCE {
 			//conceptA rel conceptB 
 			//     i       i+1    i+2
 			
-			// handle XX_and_XX -> 璽计
+			// handle XX_and_XX -> 負數
 			if(concepts.get(i).contains("_and_"))Ns=1;
 			
 			switch (concepts.get(i+1)) {
@@ -529,7 +529,7 @@ public class mySENTENCE {
 					break;
 				case "SymbolOf":
 					if(main==0) {
-						sentence = sentence +concepts.get(i) + " may be the symbol of" + concepts.get(i+2) +" ";
+						sentence = sentence +concepts.get(i) + " may be the symbol of " + concepts.get(i+2) +" ";
 						subjectTerm = concepts.get(i);
 					}
 					else if(which==0){
@@ -620,13 +620,13 @@ public class mySENTENCE {
 	}
 	
 	public void calScore(){
-		//р"_"跑Θ" "
+		//把"_"變成" "
 		sentence = sentence.replace('_',' ');
 		
-		//р程フ传Θ翴
+		//把最後空白換成句點
 		sentence = sentence.substring(0, sentence.length()-1) + ".";
 		
-		//衡length
+		//算length
 		String[] token = sentence.split(" ");
 		length = token.length;
 		
@@ -667,7 +667,7 @@ public class mySENTENCE {
 		return v_num>n_num ;
 	}
 	
-	//肚concepts琌舱Θ
+	//回傳concepts是否能組成句子
 	public boolean isSentence(String concept1, String concept2){
 		if (concepts.contains("RelatedTo") 
 				|| concepts.contains("Compoun")

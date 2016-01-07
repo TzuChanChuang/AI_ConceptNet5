@@ -36,8 +36,8 @@ public class DATABASE {
 				database.connDB("ConceptNet_en");
 				database.createStmt();
 				
-				List<myDATA> datalist = database.searchTable("refrigerator%", "IsA", "%", 1, false);
-				//List<myDATA> datalist2 = database.searchTable("%", "UsedFor", "buy_book", 1, false);
+				List<myDATA> datalist = database.searchTable("sparrow", "IsA", "%", 0, false);
+				//List<myDATA> datalist2 = database.searchTable("go/v%", "%", "%", 1, false);
 				
 				System.out.println("datalist1");
 				int i=0;
@@ -45,16 +45,16 @@ public class DATABASE {
 					System.out.println( datalist.get(i).start + " " + datalist.get(i).rel + " " + datalist.get(i).end + " w" + datalist.get(i).weight);
 					i++;
 				}
+				/*
 				System.out.println("datalist2");
-				i=0;
-				/*while(i<datalist2.size()){
+				int i=0;
+				while(i<datalist2.size()){
 					System.out.println( datalist2.get(i).start + " " + datalist2.get(i).rel + " " + datalist2.get(i).end + " w" + datalist2.get(i).weight);
 					i++;
 				}
+				//System.out.println("datalist1 size="+datalist.size());
+				System.out.println("datalist2 size="+datalist2.size());
 				*/
-				System.out.println("datalist1 size="+datalist.size());
-				//System.out.println("datalist2 size="+datalist2.size());
-				
 				//close database
 				database.closeStmt();
 				database.disconnDB();
@@ -86,7 +86,7 @@ public class DATABASE {
 			JSONDecoding(JSON_str, URL);
 			
 			time++;
-			if(time>200){//穝硈絬
+			if(time>200){//重新連線
 				time = 0;
 				closeStmt();
 				disconnDB();
@@ -100,11 +100,11 @@ public class DATABASE {
 		}
 
 		// write file
-		// trueボappend
+		// true表示append
 		BufferedWriter bufWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("done.txt",true),"utf8"));
         bufWriter.write(writeStr);
         bufWriter.close();
-        //睲
+        //清空
         bufWriter = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("doing.txt",false),"utf8"));
         bufWriter.write("");
         bufWriter.close();
@@ -125,7 +125,7 @@ public class DATABASE {
 			createStmt();
 		}
 		
-		// input/c/en /r/
+		// input加上/c/en /r/
 		start_c = "/c/en/" + start_c;
 		rel_c = "/r/" + rel_c;
 		end_c = "/c/en/"+end_c;
@@ -171,12 +171,12 @@ public class DATABASE {
         stmt.execute("CREATE TABLE IF NOT EXISTS EDGES(id text primary key not null, start text, rel text, end text, weight real, surface_text text)");
         //System.out.println("Create table sucess!");
 	}	
-	// 舱戈
+	// 放入一組資料
 	private void insertData(String id, String start, String rel, String end, double weight, String surface_text) throws SQLException{
 		stmt.execute("INSERT INTO EDGES(id, start, rel, end, weight, surface_text) VALUES( \"" +
         			id + "\", \"" + start+ "\", \"" + rel + "\", \"" + end +"\", " + weight + ", \"" + surface_text + "\")");
 	}
-	// 更戈畐臱笆
+	// 載入資料庫驅動
 	public void buildSQLite() throws ClassNotFoundException{
         Class.forName("org.sqlite.JDBC");
         System.out.println("Load sqlite Driver sucess!");
@@ -201,8 +201,8 @@ public class DATABASE {
 	     stmt.close();
 	}
 	
-	// 秆猂块JSONΑStringΘ n舱data5feature
-	// 狦numFound=1000穦
+	// 解析輸入JSON格式的String成 n組data含5個feature
+	// 如果numFound=1000會印出
 	private void JSONDecoding (String str_JSON, String web_URL) throws JSONException{
 		JSONObject myJSON = new JSONObject(str_JSON);
 		String id, start, rel, end, surface_text;
@@ -213,7 +213,7 @@ public class DATABASE {
 		
 		JSONArray edges = myJSON.getJSONArray("edges");
 		for (int i=0; i<numFound; i++){
-			// 秆猂JSON
+			// 解析JSON
 			JSONObject edge = (JSONObject)edges.get(i);
 			id = edge.get("id").toString();
 			start = edge.get("start").toString();
@@ -228,7 +228,7 @@ public class DATABASE {
 				try{
 					insertData(id, start, rel, end, weight, surface_text);
 				} catch(SQLException e){
-					// handle狡戈拜肈
+					// handle重複資料問題
 					if(e.getMessage().contains("[SQLITE_CONSTRAINT]")){
 						System.out.println("("+ start + ", " + rel+ ", "+ end +")" + "  REPEAT");
 					}
@@ -241,7 +241,7 @@ public class DATABASE {
 		}
 	}
 	
-	// 弄呼html块ΘString
+	// 讀取網頁html並輸出成String
 	private String getWeb(String strURL){
 		URL url = null;
 		String data = null;
