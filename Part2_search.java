@@ -308,8 +308,139 @@ public class Part2_search {
 		return ans;
 	}
 	public String is() throws Exception{
+		List<String> listA_b = new ArrayList<>();
+		List<String> listB_f = new ArrayList<>();
 		
-		return ans;
+		// special
+		if(concept1.equals(concept2))
+			return "Yes";
+		
+		System.out.println("----------------is, IsA search----------------");
+		//A_b
+		List<myDATA> datalistA = database.searchTable(concept1, "IsA", "%", 1.5,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+//System.out.println("A " + token[0]);			
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		List<myDATA> datalistB = database.searchTable("%", "IsA", concept2, 1.5,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+//System.out.println("B " + token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		// 互相contain
+		//A_b B_f
+		for(int i=0; i<listA_b.size(); i++){
+			if(listB_f.contains(listA_b.get(i))){
+				return "Yes";
+			}
+		}
+
+		System.out.println("----------------is, NotIsA search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "NotIsA", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "No";
+		// B_f
+		datalistB = database.searchTable("%", "NotIsA", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "No";
+		// 互相contain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "No";
+			}
+		}
+		
+		System.out.println("----------------is, HasProperty search----------------");
+		//A_b
+		datalistA = database.searchTable(concept1, "HasProperty", "%", 1.5,false);
+		for(int i=0; i<datalistA.size(); i++){
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if(listA_b.contains(concept2)) return "Yes";
+		//B_f
+		datalistB = database.searchTable("%", "HasProperty", concept2, 1.5,false);
+		for(int i=0; i<datalistB.size(); i++){
+			String[] token = datalistB.get(i).start.split("/");		
+			listB_f.add(token[0]);
+		}
+		if(listB_f.contains(concept1)) return "Yes";
+		// 互相contain
+		//A_b B_f
+		for(int i=0; i<listA_b.size(); i++){
+			if(listB_f.contains(listA_b.get(i))){
+				return "Yes";
+			}
+		}
+		
+		System.out.println("----------------is, NotHasProperty search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "NotHasProperty", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "No";
+		// B_f
+		datalistB = database.searchTable("%", "NotHasProperty", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "No";
+		// 互相contain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "No";
+			}
+		}
+		
+		System.out.println("----------------is, MadeOf search----------------");
+		// A_b
+		datalistA = database.searchTable(concept1, "MadeOf", "%",1.5, false);
+		for (int i = 0; i < datalistA.size(); i++) {
+			String[] token = datalistA.get(i).end.split("/");
+			listA_b.add(token[0]);
+		}
+		if (listA_b.contains(concept2))
+			return "Yes";
+		// B_f
+		datalistB = database.searchTable("%", "MadeOf", concept2,1.5, false);
+		for (int i = 0; i < datalistB.size(); i++) {
+			String[] token = datalistB.get(i).start.split("/");
+			listB_f.add(token[0]);
+		}
+		if (listB_f.contains(concept1))
+			return "Yes";
+		// 互相contain
+		// A_b B_f
+		for (int i = 0; i < listA_b.size(); i++) {
+			if (listB_f.contains(listA_b.get(i))) {
+				return "Yes";
+			}
+		}
+		
+		
+		//else 
+		return "No";
 	}
 	public String does() throws Exception{
 		
